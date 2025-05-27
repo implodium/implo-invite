@@ -7,7 +7,7 @@ const userData = ref<any | undefined>(undefined)
 
 onMounted(async () => {
 	const options: OAuth2AuthConfig = {
-		provider: 'discord'
+		provider: 'discord',
 	}
 
 	console.log('authenticating')
@@ -22,9 +22,7 @@ onMounted(async () => {
 </script>
 
 <template>
-	<main>
-		{{ userData }}
-	</main>
+	<RouterView />
 </template>
 
 <style scoped></style>
