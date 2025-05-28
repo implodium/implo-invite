@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import PocketBase, { type AuthProviderInfo } from 'pocketbase'
+import { type AuthProviderInfo } from 'pocketbase'
+import { usePocketBase } from '../../composables/usePocketBase';
 
-const pb = new PocketBase('http://localhost:8090')
+const pb = usePocketBase()
 const redirect = "http://localhost:5173/redirect"
 const providers = ref<AuthProviderInfo[] | undefined>(undefined)
 

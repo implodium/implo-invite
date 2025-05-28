@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import PocketBase, { type OAuth2AuthConfig } from 'pocketbase'
-import { onMounted, ref } from 'vue';
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
+import { usePocketBase } from './composables/usePocketBase'
 
-const pb = new PocketBase('http://127.0.0.1:8090')
-const userData = ref<any | undefined>(undefined)
+const pb = usePocketBase()
+const router = useRouter()
 
-onMounted(async () => {
-	const options: OAuth2AuthConfig = {
-		provider: 'discord',
+onBeforeRouteLeave(() => {
+	if (!pb.authStore.isValid) {
+		router.push('/login')
 	}
-
-	console.log('authenticating')
-	userData.value = await pb.collection('users')
-		.authWithOAuth2(options)
-		.catch(err => console.error(err))
-
-	console.log('authenticated', userData.value)
 })
-
 
 </script>
 

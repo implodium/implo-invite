@@ -5,6 +5,9 @@ import HomeView from './components/views/HomeView.vue'
 import LoginView from './components/views/LoginView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import RedirectView from './components/views/RedirectView.vue'
+import PocketBase from 'pocketbase'
+
+const pb = new PocketBase('http://localhost:8090')
 
 const routes: Readonly<RouteRecordRaw[]> = [
 	{ path: '/', component: HomeView },
@@ -19,4 +22,5 @@ const router = createRouter({
 
 createApp(App)
 	.use(router)
+	.provide('pb', pb)
 	.mount('#app')
