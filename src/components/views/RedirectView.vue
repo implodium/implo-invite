@@ -34,7 +34,6 @@ onMounted(async () => {
 	)
 
 	pb.authStore.save(user.token, user.record)
-	console.log(localStorage)
 	router.push('/')
 })
 

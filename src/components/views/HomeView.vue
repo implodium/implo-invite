@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import PocketBase, { type RecordModel } from 'pocketbase'
+import { type RecordModel } from 'pocketbase'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-const pb = new PocketBase('http://localhost:8090')
+import { usePocketBase } from '../../composables/usePocketBase'
+
+const pb = usePocketBase()
 const router = useRouter()
 
 const user = ref<RecordModel | undefined>(undefined)
@@ -19,9 +21,9 @@ onMounted(async () => {
 </script>
 
 <template>
-	<div>
+	<div class="bg-black text-white">
 		<div v-if="user">{{ user }}</div>
-		<RouterLink to="/login">Login</RouterLink>
+		<RouterLink v-if="!pb.authStore.isValid" to="/login">Login</RouterLink>
 		<button @click="() => logout()">Logout</button>
 	</div>
 </template>
