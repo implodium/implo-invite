@@ -20,6 +20,12 @@ const router = createRouter({
 	routes: routes
 })
 
+router.beforeEach((to, _) => {
+	if (!pb.authStore.isValid && to.path !== '/login' && to.path !== '/redirect') {
+		return { path: '/login' }
+	}
+})
+
 createApp(App)
 	.use(router)
 	.provide('pb', pb)
