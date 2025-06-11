@@ -1,55 +1,25 @@
 // To parse this data:
 //
-//   import { Convert, Package } from "./file";
+//   import { Convert, ImploParty2022 } from "./file";
 //
-//   const package = Convert.toPackage(json);
+//   const imploParty2022 = Convert.toImploParty2022(json);
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-export interface Package {
-    name:            string;
-    private:         boolean;
-    version:         string;
-    type:            string;
-    scripts:         Scripts;
-    dependencies:    Dependencies;
-    devDependencies: DevDependencies;
-}
-
-export interface Dependencies {
-    "@nuxt/ui":          string;
-    "@tailwindcss/vite": string;
-    pocketbase:          string;
-    tailwindcss:         string;
-    vue:                 string;
-    "vue-router":        string;
-}
-
-export interface DevDependencies {
-    "@vitejs/plugin-vue": string;
-    "@types/bun":         string;
-    "@vue/tsconfig":      string;
-    typescript:           string;
-    vite:                 string;
-    "vue-tsc":            string;
-}
-
-export interface Scripts {
-    dev:     string;
-    build:   string;
-    preview: string;
+export interface ImploParty2022 {
+    data: Date;
 }
 
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
-    public static toPackage(json: string): Package {
-        return cast(JSON.parse(json), r("Package"));
+    public static toImploParty2022(json: string): ImploParty2022 {
+        return cast(JSON.parse(json), r("ImploParty2022"));
     }
 
-    public static packageToJson(value: Package): string {
-        return JSON.stringify(uncast(value, r("Package")), null, 2);
+    public static imploParty2022ToJson(value: ImploParty2022): string {
+        return JSON.stringify(uncast(value, r("ImploParty2022")), null, 2);
     }
 }
 
@@ -206,34 +176,7 @@ function r(name: string) {
 }
 
 const typeMap: any = {
-    "Package": o([
-        { json: "name", js: "name", typ: "" },
-        { json: "private", js: "private", typ: true },
-        { json: "version", js: "version", typ: "" },
-        { json: "type", js: "type", typ: "" },
-        { json: "scripts", js: "scripts", typ: r("Scripts") },
-        { json: "dependencies", js: "dependencies", typ: r("Dependencies") },
-        { json: "devDependencies", js: "devDependencies", typ: r("DevDependencies") },
-    ], false),
-    "Dependencies": o([
-        { json: "@nuxt/ui", js: "@nuxt/ui", typ: "" },
-        { json: "@tailwindcss/vite", js: "@tailwindcss/vite", typ: "" },
-        { json: "pocketbase", js: "pocketbase", typ: "" },
-        { json: "tailwindcss", js: "tailwindcss", typ: "" },
-        { json: "vue", js: "vue", typ: "" },
-        { json: "vue-router", js: "vue-router", typ: "" },
-    ], false),
-    "DevDependencies": o([
-        { json: "@vitejs/plugin-vue", js: "@vitejs/plugin-vue", typ: "" },
-        { json: "@types/bun", js: "@types/bun", typ: "" },
-        { json: "@vue/tsconfig", js: "@vue/tsconfig", typ: "" },
-        { json: "typescript", js: "typescript", typ: "" },
-        { json: "vite", js: "vite", typ: "" },
-        { json: "vue-tsc", js: "vue-tsc", typ: "" },
-    ], false),
-    "Scripts": o([
-        { json: "dev", js: "dev", typ: "" },
-        { json: "build", js: "build", typ: "" },
-        { json: "preview", js: "preview", typ: "" },
+    "ImploParty2022": o([
+        { json: "data", js: "data", typ: Date },
     ], false),
 };
