@@ -30,7 +30,7 @@ pb_migrations
 
 # creds
 
-.creds.json
+creds.json
 
 # tmp
 
