@@ -8,11 +8,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    2025: typeof import('./src/components/views/2025.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     HomeView: typeof import('./src/components/views/HomeView.vue')['default']
     LoginView: typeof import('./src/components/views/LoginView.vue')['default']
+    Party2025: typeof import('./src/components/views/party/Party2025.vue')['default']
     RedirectView: typeof import('./src/components/views/RedirectView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
+    UCard: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Card.vue')['default']
   }
 }

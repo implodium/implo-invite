@@ -35,3 +35,8 @@ creds.json
 # tmp
 
 tmp
+
+# nuxt ui
+
+auto-imports.d.ts
+components.d.ts

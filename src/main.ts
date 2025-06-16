@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import ui from '@nuxt/ui/vue-plugin'
 import './style.css'
 import HomeView from './components/views/HomeView.vue'
 import LoginView from './components/views/LoginView.vue'
@@ -31,5 +32,6 @@ router.beforeEach((to, _) => {
 
 createApp(App)
 	.use(router)
+	.use(ui)
 	.provide('pb', pb)
 	.mount('#app')
