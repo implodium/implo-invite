@@ -27,3 +27,11 @@ dist-ssr
 
 pb_data
 pb_migrations
+
+# creds
+
+creds.json
+
+# tmp
+
+tmp
