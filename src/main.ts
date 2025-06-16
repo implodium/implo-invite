@@ -6,13 +6,15 @@ import LoginView from './components/views/LoginView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import RedirectView from './components/views/RedirectView.vue'
 import PocketBase from 'pocketbase'
+import Party2025 from './components/views/party/Party2025.vue'
 
 const pb = new PocketBase('http://localhost:8090')
 
 const routes: Readonly<RouteRecordRaw[]> = [
 	{ path: '/', component: HomeView },
 	{ path: '/login', component: LoginView },
-	{ path: '/redirect', component: RedirectView }
+	{ path: '/redirect', component: RedirectView },
+	{ path: '/party/2025', component: Party2025 }
 ]
 
 const router = createRouter({
@@ -22,6 +24,7 @@ const router = createRouter({
 
 router.beforeEach((to, _) => {
 	if (!pb.authStore.isValid && to.path !== '/login' && to.path !== '/redirect') {
+		localStorage.setItem('target', to.path)
 		return { path: '/login' }
 	}
 })

@@ -34,7 +34,8 @@ onMounted(async () => {
 	)
 
 	pb.authStore.save(user.token, user.record)
-	router.push('/')
+	const target = localStorage.getItem('target')
+	router.push(target ?? '/')
 })
 
 
