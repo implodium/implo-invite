@@ -1,8 +1,7 @@
-import { readdir, mkdir, rmdir, exists } from 'fs/promises'
+import { readdir, mkdir, exists } from 'fs/promises'
 import PocketBase from 'pocketbase'
 import enquirer from 'enquirer'
 import { Event } from '../src/util/types'
-import {ImploParty2022} from '../src/util/party-types/implo_party_2022'
 
 const { prompt } = enquirer
 
@@ -18,18 +17,16 @@ const main = async () => {
 		return
 	}
 
-	const events: Event[] = await pb.collection('event').getFullList()
-	console.log(events)
+	const events: Event[] = await pb.collection('events').getFullList()
 
-	if (! (await exists('tmp'))) {
+	if (!(await exists('tmp'))) {
 		await mkdir('tmp', {})
 	}
 
 	for (const event of events) {
-		const { name, data } = event
+		const { name, information } = event
 		const filename = name.replace(/ /g, "_").toLowerCase()
-		const eventFile = Bun.file(`tmp/${filename}.json`)
-		eventFile.write(JSON.stringify(data))
+		await Bun.write(`tmp/${filename}.json`, JSON.stringify(information))
 	}
 
 	await generateTypes('tmp', 'src/util/event-types/')
@@ -67,7 +64,6 @@ const generateTypes = async (directory: string, out_directory: string) => {
 	const promises: ReturnType<typeof Bun.spawn>[] = []
 
 	for (const file of await readdir(directory)) {
-		console.log(file)
 		if (!file.endsWith('.json')) {
 			continue
 		}
