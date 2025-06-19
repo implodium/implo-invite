@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { StepperItem } from '@nuxt/ui';
+import type { StepperItem } from '@nuxt/ui';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { usePocketBase } from '../../../composables/usePocketBase';
 import { onMounted } from 'vue';
-import { ImploParty2025 } from '../../../util/event-types/implo_party_2025';
+import type { ImploParty2025 } from '../../../util/event-types/implo_party_2025';
+import type { Event } from '../../../util/types';
 
-const EVENT_NAME = 'Implo Party 2025';
+// const EVENT_NAME = 'Implo Party 2025';
 const EVENT_ID = '5khz1v36q0hp2tp'
 const pb = usePocketBase();
-const event = ref<Event>(undefined);
+const event = ref<Event | undefined>(undefined);
 
 const info = computed<ImploParty2025>(() => {
 	return event.value?.information;
