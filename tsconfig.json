@@ -15,11 +15,6 @@
 		"moduleResolution": "bundler",
 		"types": [
 			"bun-types"
-		],
-		"paths": {
-			"#build/ui": [
-				"./node_modules/@nuxt/ui/.nuxt/ui"
-			]
-		}
+		]
 	}
 }
