@@ -8,14 +8,29 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface ImploParty2025 {
-    timestamps: Timestamp[];
+    timestamps:  Timestamp[];
+    shopping:    Shopping;
+    packingList: PackingList[];
+}
+
+export interface PackingList {
+    title: string;
+    icon:  string;
+}
+
+export interface Shopping {
+    date:     string;
+    time:     string;
+    location: string;
 }
 
 export interface Timestamp {
-    title:  string;
-    time:   string;
-    icon?:  string;
-    extra?: string;
+    title:    string;
+    time:     string;
+    date:     string;
+    location: string;
+    icon:     string;
+    extra?:   string;
 }
 
 // Converts JSON strings to/from your types
@@ -185,11 +200,24 @@ function r(name: string) {
 const typeMap: any = {
     "ImploParty2025": o([
         { json: "timestamps", js: "timestamps", typ: a(r("Timestamp")) },
+        { json: "shopping", js: "shopping", typ: r("Shopping") },
+        { json: "packingList", js: "packingList", typ: a(r("PackingList")) },
+    ], false),
+    "PackingList": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "icon", js: "icon", typ: "" },
+    ], false),
+    "Shopping": o([
+        { json: "date", js: "date", typ: "" },
+        { json: "time", js: "time", typ: "" },
+        { json: "location", js: "location", typ: "" },
     ], false),
     "Timestamp": o([
         { json: "title", js: "title", typ: "" },
         { json: "time", js: "time", typ: "" },
-        { json: "icon", js: "icon", typ: u(undefined, "") },
+        { json: "date", js: "date", typ: "" },
+        { json: "location", js: "location", typ: "" },
+        { json: "icon", js: "icon", typ: "" },
         { json: "extra", js: "extra", typ: u(undefined, "") },
     ], false),
 };
