@@ -47,7 +47,7 @@ onMounted(async () => {
 		<UCard variant="subtle" class="aspect-12/16 h-11/12" as="main"
 			:ui="{ body: 'flex flex-row h-full w-full divide-x-2' }">
 			<template #default>
-				<section class="w-full flex items-center flex-col gap-10 pr-5">
+				<section class="w-full flex items-center flex-col gap-10">
 					<img class="w-8/12" src="/logos/Party2025.svg" alt="">
 					<UStepper class="w-full" disabled :items="stepperTimeStamps" v-model="stepperActive" />
 
