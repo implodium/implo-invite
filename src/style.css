@@ -43,3 +43,7 @@
   --ui-border-inverted: var(--color-white);
 }
 
+@theme {
+	--breakpoint-desktop: 1011px;
+	--breakpoint-tablet: 768px;
+}
