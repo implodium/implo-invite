@@ -19,6 +19,7 @@ const isDesktop = useMediaQuery('(min-width: 1011px');
 const isTablet = useMediaQuery('(min-width: 768px');
 const registerModalOpen = ref(false)
 const participantsModalOpen = ref(false)
+const pollsModalOpen = ref(false)
 const formResults = ref({
 	name: "",
 	dinner: false,
@@ -180,6 +181,12 @@ function logout() {
 		<div class="fixed top-0 right-0 p-5">
 			<UButton @click="logout" icon="material-symbols:logout"></UButton>
 		</div>
+		<UModal v-model:open="pollsModalOpen" title="Polls"
+			description="The polls are done in discord. Here is a link to the thread">
+			<template #body>
+				<span>this is a cool link</span>
+			</template>
+		</UModal>
 		<UModal v-model:open="participantsModalOpen" title="Participants"
 			description="Here are all the participants that have registered so far">
 			<template #body>
@@ -288,13 +295,17 @@ function logout() {
 					</div>
 
 					<USeparator label="Registration" :ui="{ label: 'text-3xl' }" />
-					<div class="flex flex-row gap-5 w-full pb-10 desktop:pb-5">
+					<div class="flex flex-col gap-5 w-full pb-10 desktop:pb-5 tablet:flex-row">
 						<UButton class="py-5 flex justify-center items-center grow" @click="registerModalOpen = true"
 							size="xl">
 							{{ registration === undefined ? 'Register' : 'Edit Registration' }}</UButton>
 						<UButton class="py-5 flex justify-center items-center grow"
-							@click="participantsModalOpen = true" size="xl">Who
-							is going?
+							@click="participantsModalOpen = true" size="xl">
+							Paticipants
+						</UButton>
+						<UButton class="py-5 flex justify-center items-center grow" @click="pollsModalOpen = true"
+							size="xl">
+							Polls
 						</UButton>
 					</div>
 				</section>
