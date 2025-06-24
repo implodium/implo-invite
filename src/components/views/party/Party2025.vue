@@ -94,6 +94,10 @@ async function submitRegistration() {
 	registerModalOpen.value = false
 }
 
+function removePlusOne(name: string) {
+	plusOneResults.value = plusOneResults.value.filter(p => p.name !== name)
+}
+
 async function deleteRegistration() {
 	if (registration.value === undefined || registration.value.id === undefined) {
 		return
@@ -101,9 +105,18 @@ async function deleteRegistration() {
 
 	await pb.collection('registrations')
 		.delete(registration.value.id)
-	registration.value = undefined
 
 	registerModalOpen.value = false
+
+	registration.value = undefined
+
+	formResults.value = {
+		name: "",
+		dinner: false,
+		overnight: false,
+		shopping: false
+	}
+	plusOneResults.value = []
 }
 
 onMounted(async () => {
@@ -158,9 +171,11 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 						</div>
 					</template>
 				</UCard>
-				<UCard v-if="user" v-for="plusOne in plusOneResults" :title="user?.name" variant="outline">
+				<UCard v-if="user" v-for="plusOne in plusOneResults" :title="user?.name" variant="outline"
+					:ui="{ header: 'flex justify-between items-center' }">
 					<template #header>
-						{{ plusOne.name }}
+						<span>{{ plusOne.name }}</span>
+						<UButton @click="removePlusOne(plusOne.name)" icon="mdi:remove" variant="soft" />
 					</template>
 					<template #default>
 						<div class="flex justify-between">
