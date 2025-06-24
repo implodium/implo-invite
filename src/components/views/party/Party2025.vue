@@ -196,9 +196,12 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 						</div>
 					</template>
 				</UCard>
-				<UButton @click="addPerson" :disabled="plusOneResults.length > 3"
-					class="flex justify-center items-center">Add Person
-				</UButton>
+				<UTooltip :disabled="plusOneResults.length <= 2" text="You can only add up to 3 extra people">
+					<UButton @click="addPerson" :disabled="plusOneResults.length > 2"
+						class="flex justify-center items-center">Add
+						Person
+					</UButton>
+				</UTooltip>
 			</template>
 			<template #footer>
 				<UButton @click="submitRegistration">{{ registration === undefined ? 'Submit' : 'Save' }}</UButton>
