@@ -20,6 +20,9 @@ const isTablet = useMediaQuery('(min-width: 768px');
 const registerModalOpen = ref(false)
 const participantsModalOpen = ref(false)
 const pollsModalOpen = ref(false)
+const shoppingFilter = ref<boolean>(false)
+const overnightFilter = ref<boolean>(false)
+const dinnerFilter = ref<boolean>(false)
 const formResults = ref({
 	name: "",
 	dinner: false,
@@ -190,6 +193,10 @@ function logout() {
 		<UModal v-model:open="participantsModalOpen" title="Participants"
 			description="Here are all the participants that have registered so far">
 			<template #body>
+				<div>
+					<UButton variant="outline" color="neutral" @click="shoppingFilter = !shoppingFilter">Shopping
+					</UButton>
+				</div>
 				<UTree disabled :items="participantTree" />
 			</template>
 		</UModal>
