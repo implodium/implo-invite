@@ -261,6 +261,15 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 			</template>
 		</UCard>
 	</div>
+	<div class="flex justify-center items-center w-screen h-screen flex-col gap-10" v-else>
+		<UIcon name="clarity:no-access-line" class="size-64 text-dimmed" />
+		<div class="flex justify-center items-center flex-col">
+			<h1 class="text-3xl text-dimmed">Ohh no! It seems like you are not yet invited to this event</h1>
+			<h1 class="text-3xl text-dimmed">
+				This could very well be a mistake. Contact the organizer (LebendeMoge) of this event
+			</h1>
+		</div>
+	</div>
 </template>
 
 <style scoped></style>
