@@ -16,6 +16,7 @@ declare module 'vue' {
     RedirectView: typeof import('./src/components/views/RedirectView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TestingView: typeof import('./src/components/views/TestingView.vue')['default']
     Timeline: typeof import('./src/components/views/ui/Timeline.vue')['default']
     UAlert: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
