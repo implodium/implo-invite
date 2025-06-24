@@ -9,7 +9,6 @@ import type { Event } from '../../../util/types';
 import { useMediaQuery } from '@vueuse/core';
 import { watch } from 'vue';
 
-// const EVENT_NAME = 'Implo Party 2025';
 const EVENT_ID = '5khz1v36q0hp2tp'
 const pb = usePocketBase();
 const event = ref<Event | undefined>(undefined);
@@ -31,7 +30,7 @@ const timestamps = computed(() => {
 
 const stepperTimeStamps = computed<StepperItem[]>(() => {
 	return timestamps.value?.map((timestamp) => {
-		const extra = timestamp.extra !== undefined ? `${timestamp.extra}: ` : '';
+		const extra = timestamp.extra !== undefined ? ` : ${timestamp.extra} ` : '';
 		const title = `${timestamp.title} ${extra}`;
 		const description = `${timestamp.date} ${timestamp.time} ; ${timestamp.location}`
 		return {
