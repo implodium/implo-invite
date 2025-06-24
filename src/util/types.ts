@@ -23,5 +23,10 @@ export type Registration<T> = {
 	registration: {
 		self: T,
 		others: T[]
+	},
+	expand?: {
+		user_id: {
+			name: string
+		}
 	}
 }

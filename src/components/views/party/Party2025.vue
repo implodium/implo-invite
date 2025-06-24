@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StepperItem } from '@nuxt/ui';
+import type { StepperItem, TreeItem } from '@nuxt/ui';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { usePocketBase } from '../../../composables/usePocketBase';
@@ -7,15 +7,18 @@ import { onMounted } from 'vue';
 import type { ImploParty2025 } from '../../../util/event-types/implo_party_2025';
 import type { Event, User, FormResult, Registration } from '../../../util/types';
 import { useMediaQuery } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 
 const EVENT_ID = '5khz1v36q0hp2tp'
 const pb = usePocketBase();
+const router = useRouter();
 const event = ref<Event | undefined>(undefined);
 const user = ref<User | undefined>(undefined);
 const registration = ref<Registration<FormResult> | undefined>(undefined)
 const isDesktop = useMediaQuery('(min-width: 1011px');
 const isTablet = useMediaQuery('(min-width: 768px');
 const registerModalOpen = ref(false)
+const participantsModalOpen = ref(false)
 const formResults = ref({
 	name: "",
 	dinner: false,
@@ -24,6 +27,7 @@ const formResults = ref({
 })
 
 const plusOneResults = ref<FormResult[]>([])
+const allRegistrations = ref<Registration<FormResult>[]>([])
 
 const info = computed<ImploParty2025>(() => {
 	return event.value?.information;
@@ -43,6 +47,23 @@ const stepperTimeStamps = computed<StepperItem[]>(() => {
 			title: title,
 			description: description,
 			icon: timestamp.icon,
+		}
+	})
+})
+
+const participantTree = computed<TreeItem[]>(() => {
+	return allRegistrations.value.map(r => {
+		return {
+			label: r.expand?.user_id.name.split("#")[0] ?? '??',
+			icon: 'material-symbols:person',
+			defaultExpanded: true,
+			children: r.registration.others.map(o => {
+				return {
+					label: o.name.split("#")[0],
+					icon: 'mdi:person-plus',
+					children: []
+				}
+			})
 		}
 	})
 })
@@ -91,6 +112,7 @@ async function submitRegistration() {
 			.create(new_registration)
 	}
 
+	allRegistrations.value = await pb.collection('registrations').getFullList({ expand: 'user_id' })
 	registerModalOpen.value = false
 }
 
@@ -122,6 +144,8 @@ async function deleteRegistration() {
 onMounted(async () => {
 	event.value = await pb.collection('events').getOne(EVENT_ID)
 	user.value = await pb.collection('users').getOne(pb.authStore.record?.id ?? '')
+	allRegistrations.value = await pb.collection('registrations').getFullList({ expand: 'user_id' })
+	console.log("all", allRegistrations.value)
 	registration.value = await getRegistration()
 
 	formResults.value = registration.value?.registration.self ?? {
@@ -144,10 +168,24 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 		return undefined
 	}
 }
+
+function logout() {
+	pb.authStore.clear()
+	router.push('/login')
+}
 </script>
 
 <template>
 	<div class="w-screen h-screen flex justify-center items-center" v-if="info && timestamps && stepperTimeStamps">
+		<div class="fixed top-0 right-0 p-5">
+			<UButton @click="logout" icon="material-symbols:logout"></UButton>
+		</div>
+		<UModal v-model:open="participantsModalOpen" title="Participants"
+			description="Here are all the participants that have registered so far">
+			<template #body>
+				<UTree disabled :items="participantTree" />
+			</template>
+		</UModal>
 		<UModal v-model:open="registerModalOpen" title="Register to the Party"
 			description="Enter your details into the form and press submit to register to the Party"
 			:ui="{ body: 'flex gap-5 flex-col' }">
@@ -254,7 +292,9 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 						<UButton class="py-5 flex justify-center items-center grow" @click="registerModalOpen = true"
 							size="xl">
 							{{ registration === undefined ? 'Register' : 'Edit Registration' }}</UButton>
-						<UButton class="py-5 flex justify-center items-center grow" size="xl">Who is going?
+						<UButton class="py-5 flex justify-center items-center grow"
+							@click="participantsModalOpen = true" size="xl">Who
+							is going?
 						</UButton>
 					</div>
 				</section>
