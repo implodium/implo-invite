@@ -11,6 +11,14 @@ export interface ImploParty2025 {
     timestamps:  Timestamp[];
     shopping:    Shopping;
     packingList: PackingList[];
+    form:        Form;
+}
+
+export interface Form {
+    name:      string;
+    dinner:    string;
+    shopping:  string;
+    overnight: string;
 }
 
 export interface PackingList {
@@ -202,6 +210,13 @@ const typeMap: any = {
         { json: "timestamps", js: "timestamps", typ: a(r("Timestamp")) },
         { json: "shopping", js: "shopping", typ: r("Shopping") },
         { json: "packingList", js: "packingList", typ: a(r("PackingList")) },
+        { json: "form", js: "form", typ: r("Form") },
+    ], false),
+    "Form": o([
+        { json: "name", js: "name", typ: "" },
+        { json: "dinner", js: "dinner", typ: "" },
+        { json: "shopping", js: "shopping", typ: "" },
+        { json: "overnight", js: "overnight", typ: "" },
     ], false),
     "PackingList": o([
         { json: "title", js: "title", typ: "" },

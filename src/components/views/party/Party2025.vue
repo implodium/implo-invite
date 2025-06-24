@@ -5,20 +5,25 @@ import { ref } from 'vue';
 import { usePocketBase } from '../../../composables/usePocketBase';
 import { onMounted } from 'vue';
 import type { ImploParty2025 } from '../../../util/event-types/implo_party_2025';
-import type { Event } from '../../../util/types';
+import type { Event, User, FormResult, Registration } from '../../../util/types';
 import { useMediaQuery } from '@vueuse/core';
-import { watch } from 'vue';
 
 const EVENT_ID = '5khz1v36q0hp2tp'
 const pb = usePocketBase();
 const event = ref<Event | undefined>(undefined);
+const user = ref<User | undefined>(undefined);
+const registration = ref<Registration<FormResult> | undefined>(undefined)
 const isDesktop = useMediaQuery('(min-width: 1011px');
 const isTablet = useMediaQuery('(min-width: 768px');
+const registerModalOpen = ref(false)
+const formResults = ref({
+	name: "",
+	dinner: false,
+	overnight: false,
+	shopping: false
+})
 
-watch(isDesktop, () => {
-	console.log('isDesktop', isDesktop.value)
-	console.log('isTablet', isTablet.value)
-}, { deep: true })
+const plusOneResults = ref<FormResult[]>([])
 
 const info = computed<ImploParty2025>(() => {
 	return event.value?.information;
@@ -49,15 +54,143 @@ function splitDescription(description: string): { datetime: string, location: st
 
 const stepperActive = computed(() => stepperTimeStamps.value.length - 1)
 
+function addPerson() {
+	plusOneResults.value.push({
+		name: "",
+		dinner: false,
+		overnight: false,
+		shopping: false
+	})
+}
+
+async function submitRegistration() {
+	console.log(formResults.value)
+	console.log(plusOneResults.value)
+
+	if (user.value === undefined) {
+		return
+	}
+
+	formResults.value.name = user.value.name
+	const id = user.value.id
+
+	const new_registration: Registration<FormResult> = {
+		user_id: id,
+		event_id: EVENT_ID,
+		registration: {
+			self: formResults.value,
+			others: plusOneResults.value
+		}
+	}
+
+	if (registration.value !== undefined && registration.value.id !== undefined) {
+		registration.value = await pb.collection('registrations')
+			.update(registration.value.id, new_registration)
+	} else {
+		registration.value = await pb.collection('registrations')
+			.create(new_registration)
+	}
+
+	registerModalOpen.value = false
+}
+
+async function deleteRegistration() {
+	if (registration.value === undefined || registration.value.id === undefined) {
+		return
+	}
+
+	await pb.collection('registrations')
+		.delete(registration.value.id)
+	registration.value = undefined
+
+	registerModalOpen.value = false
+}
+
 onMounted(async () => {
 	event.value = await pb.collection('events').getOne(EVENT_ID)
+	user.value = await pb.collection('users').getOne(pb.authStore.record?.id ?? '')
+	registration.value = await getRegistration()
+
+	formResults.value = registration.value?.registration.self ?? {
+		name: "",
+		dinner: false,
+		overnight: false,
+		shopping: false
+	}
+
+	plusOneResults.value = registration.value?.registration.others ?? []
+
+	console.log(registration.value)
 })
+
+async function getRegistration(): Promise<Registration<FormResult> | undefined> {
+	try {
+		return await pb.collection('registrations')
+			.getFirstListItem(`user_id="${user.value?.id}" && event_id="${EVENT_ID}"`)
+	} catch (e) {
+		return undefined
+	}
+}
 </script>
 
 <template>
 	<div class="w-screen h-screen flex justify-center items-center" v-if="info && timestamps && stepperTimeStamps">
-		<UCard variant="subtle"
-			class="w-full h-full desktop:aspect-14/16 desktop:w-auto desktop:max-h-11/12 desktop:h-auto overflow-auto"
+		<UModal v-model:open="registerModalOpen" title="Register to the Party"
+			description="Enter your details into the form and press submit to register to the Party"
+			:ui="{ body: 'flex gap-5 flex-col' }">
+			<template #body>
+				<UCard v-if="user" :title="user?.name" variant="outline">
+					<template #header>
+						{{ user.name.split("#")[0] }}
+					</template>
+					<template #default>
+						<div class="flex justify-between">
+							{{ info.form.dinner }}
+							<USwitch v-model="formResults.dinner" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.shopping }}
+							<USwitch v-model="formResults.shopping" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.overnight }}
+							<USwitch v-model="formResults.overnight" />
+						</div>
+					</template>
+				</UCard>
+				<UCard v-if="user" v-for="plusOne in plusOneResults" :title="user?.name" variant="outline">
+					<template #header>
+						{{ plusOne.name }}
+					</template>
+					<template #default>
+						<div class="flex justify-between">
+							{{ info.form.name }}
+							<UInput v-model="plusOne.name" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.dinner }}
+							<USwitch v-model="plusOne.dinner" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.shopping }}
+							<USwitch v-model="plusOne.shopping" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.overnight }}
+							<USwitch v-model="plusOne.overnight" />
+						</div>
+					</template>
+				</UCard>
+				<UButton @click="addPerson" :disabled="plusOneResults.length > 3"
+					class="flex justify-center items-center">Add Person
+				</UButton>
+			</template>
+			<template #footer>
+				<UButton @click="submitRegistration">{{ registration === undefined ? 'Submit' : 'Save' }}</UButton>
+				<UButton v-if="registration !== undefined" @click="deleteRegistration">Remove Registration</UButton>
+			</template>
+		</UModal>
+		<UCard variant="subtle" class="w-full h-full desktop:w-8/12 desktop:max-h-11/12 desktop:h-auto overflow-auto"
 			as="main" :ui="{ body: 'flex flex-row h-full w-full divide-x-2' }">
 			<template #default>
 				<section class="w-full flex items-center flex-col gap-10">
@@ -99,8 +232,10 @@ onMounted(async () => {
 					</div>
 
 					<USeparator label="Registration" :ui="{ label: 'text-3xl' }" />
-					<div class="flex flex-row gap-5 w-full pb-10">
-						<UButton class="py-5 flex justify-center items-center grow" size="xl">Register</UButton>
+					<div class="flex flex-row gap-5 w-full pb-10 desktop:pb-5">
+						<UButton class="py-5 flex justify-center items-center grow" @click="registerModalOpen = true"
+							size="xl">
+							{{ registration === undefined ? 'Register' : 'Edit Registration' }}</UButton>
 						<UButton class="py-5 flex justify-center items-center grow" size="xl">Who is going?
 						</UButton>
 					</div>
