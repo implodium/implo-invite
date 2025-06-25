@@ -173,6 +173,15 @@ async function getRegistration(): Promise<Registration<FormResult> | undefined> 
 	}
 }
 
+function getRegistrationCount(registrations: Registration<FormResult>[]): number {
+	return registrations.flatMap(registration => {
+		const allRegistrations = []
+		allRegistrations.push(registration.registration.self)
+		allRegistrations.push(...registration.registration.others)
+		return allRegistrations
+	}).length
+}
+
 function logout() {
 	pb.authStore.clear()
 	router.push('/login')
@@ -308,6 +317,9 @@ function logout() {
 							{{ registration === undefined ? 'Register' : 'Edit Registration' }}</UButton>
 						<UButton class="py-5 flex justify-center items-center grow"
 							@click="participantsModalOpen = true" size="xl">
+							<UBadge class="text-xs" variant="solid" color="secondary">
+								{{ getRegistrationCount(allRegistrations) }}
+							</UBadge>
 							Paticipants
 						</UButton>
 						<UButton class="py-5 flex justify-center items-center grow" @click="pollsModalOpen = true"
