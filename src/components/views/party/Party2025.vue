@@ -269,7 +269,7 @@ function logout() {
 				<UButton v-if="registration !== undefined" @click="deleteRegistration">Remove Registration</UButton>
 			</template>
 		</UModal>
-		<UCard variant="subtle" class="w-full h-full desktop:w-8/12 desktop:max-h-11/12 desktop:h-auto overflow-auto"
+		<UCard variant="subtle" class="w-full h-full desktop:w-6xl desktop:max-h-11/12 desktop:h-auto overflow-auto"
 			as="main" :ui="{ body: 'flex flex-row h-full w-full divide-x-2' }">
 			<template #default>
 				<section class="w-full flex items-center flex-col gap-10">
