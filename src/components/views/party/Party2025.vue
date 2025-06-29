@@ -55,20 +55,42 @@ const stepperTimeStamps = computed<StepperItem[]>(() => {
 	})
 })
 
+function filterRecord(formResult: FormResult): boolean {
+	return filterField(formResult.dinner, dinnerFilter.value) && filterField(formResult.overnight, overnightFilter.value) && filterField(formResult.shopping, shoppingFilter.value)
+}
+
+function filterField(value: boolean, filter: boolean): boolean {
+	if (filter === false) {
+		return true
+	}
+
+	return value
+}
+
 const participantTree = computed<TreeItem[]>(() => {
-	return allRegistrations.value.map(r => {
-		return {
-			label: r.expand?.user_id.name.split("#")[0] ?? '??',
-			icon: 'material-symbols:person',
-			defaultExpanded: true,
-			children: r.registration.others.map(o => {
-				return {
-					label: o.name.split("#")[0],
-					icon: 'mdi:person-plus',
-					children: []
-				}
-			})
-		}
+	return allRegistrations.value
+		.filter(r => {
+			const childrenFiltered = r.registration.others.filter(o => filterRecord(o))
+			return filterRecord(r.registration.self) || childrenFiltered.length > 0
+		})
+		.map((r): TreeItem => {
+			return {
+				label: r.expand?.user_id.name.split("#")[0] ?? '??',
+				icon: 'material-symbols:person',
+				ui: {
+					link: filterRecord(r.registration.self) ? '' : 'text-muted'
+				},
+				defaultExpanded: true,
+				children: r.registration.others
+				.filter(o => filterRecord(o))
+				.map((o): TreeItem => {
+					return {
+						label: o.name.split("#")[0],
+						icon: 'mdi:person-plus',
+						children: [],
+					}
+				})
+			}
 	})
 })
 
@@ -160,8 +182,6 @@ onMounted(async () => {
 	}
 
 	plusOneResults.value = registration.value?.registration.others ?? []
-
-	console.log(registration.value)
 })
 
 async function getRegistration(): Promise<Registration<FormResult> | undefined> {
@@ -182,16 +202,29 @@ function getRegistrationCount(registrations: Registration<FormResult>[]): number
 	}).length
 }
 
+const filteredParticipantCount = computed(() => {
+	return participantTree.value.flatMap(outher => {
+		const allParticipants = [...outher.children ?? [], outher]
+		return allParticipants
+	}).length
+})
+
 function logout() {
 	pb.authStore.clear()
 	router.push('/login')
 }
+
+const avatar_url = computed(() => {
+	return pb.files.getURL(user.value as any, user.value?.avatar ?? '')
+})
 </script>
 
 <template>
 	<div class="w-screen h-screen flex justify-center items-center" v-if="info && timestamps && stepperTimeStamps">
 		<div class="fixed top-0 right-0 p-5">
-			<UButton @click="logout" icon="material-symbols:logout"></UButton>
+			<UDropdownMenu :items="[{ label: 'Logout', icon: 'material-symbols:logout', onSelect: () => logout() }]">
+				<UAvatar :src="avatar_url" />
+			</UDropdownMenu>
 		</div>
 		<UModal v-model:open="pollsModalOpen" title="Polls"
 			description="The polls are done in discord. Here is a link to the thread">
@@ -200,12 +233,20 @@ function logout() {
 			</template>
 		</UModal>
 		<UModal v-model:open="participantsModalOpen" title="Participants"
-			description="Here are all the participants that have registered so far">
+			description="Here are all the participants that have registered so far" :ui="{
+				body: 'flex flex-col gap-3'
+			}">
 			<template #body>
-				<div>
-					<UButton variant="outline" color="neutral" @click="shoppingFilter = !shoppingFilter">Shopping
-					</UButton>
-				</div>
+				<header class="flex flex-row justify-between">
+					<div class="flex flex-row gap-1">
+						<Filter v-model:is-active="dinnerFilter" title="Dinner"/>
+						<Filter v-model:is-active="shoppingFilter" title="Shopping"/>
+						<Filter v-model:is-active="overnightFilter" title="Overnight"/>
+					</div>
+					<div>
+						{{ filteredParticipantCount }}
+					</div>
+				</header>
 				<UTree disabled :items="participantTree" />
 			</template>
 		</UModal>
