@@ -317,10 +317,10 @@ function logout() {
 							{{ registration === undefined ? 'Register' : 'Edit Registration' }}</UButton>
 						<UButton class="py-5 flex justify-center items-center grow"
 							@click="participantsModalOpen = true" size="xl">
-							<UBadge class="text-xs" variant="solid" color="secondary">
+							Paticipants
+							<UBadge class="text-xs" variant="subtle" color="neutral">
 								{{ getRegistrationCount(allRegistrations) }}
 							</UBadge>
-							Paticipants
 						</UButton>
 						<UButton class="py-5 flex justify-center items-center grow" @click="pollsModalOpen = true"
 							size="xl">
