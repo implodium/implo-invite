@@ -26,3 +26,8 @@ export const promptCredentials = async (): Promise<{ username: string, password:
 
 	return { username, password }
 }
+
+export type Invitation = {
+	event_id: string,
+	discord_email_or_username: string
+}
