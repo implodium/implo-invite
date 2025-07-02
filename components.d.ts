@@ -8,7 +8,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    2025: typeof import('./src/components/views/2025.vue')['default']
     Filter: typeof import('./src/components/Filter.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     HomeView: typeof import('./src/components/views/HomeView.vue')['default']
@@ -17,8 +16,6 @@ declare module 'vue' {
     RedirectView: typeof import('./src/components/views/RedirectView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TestingView: typeof import('./src/components/views/TestingView.vue')['default']
-    Timeline: typeof import('./src/components/views/ui/Timeline.vue')['default']
     UAlert: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
     UAvatar: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']

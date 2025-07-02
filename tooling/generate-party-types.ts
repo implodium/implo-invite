@@ -42,7 +42,9 @@ const generateTypes = async (directory: string, out_directory: string) => {
 			"quicktype",
 			`${directory}/${file}`,
 			"--out",
-			`${out_directory}/${file.replace('.json', '')}.ts`
+			`${out_directory}/${file.replace('.json', '')}.ts`,
+			"--nice-property-names",
+			"--just-types"
 		]))
 	}
 
