@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits, OAuth2Guild, Role } from "discord.js";
 import enquirer from "enquirer";
 import { Invitation, promptCredentials } from "./util";
 import PocketBase from "pocketbase";
-import {Event} from "../src/util/types";
+import { Event } from "../src/util/types";
 
 const { prompt } = enquirer;
 
@@ -60,9 +60,20 @@ async function main() {
 			process.exit(1)
 		}
 
+		const duplicates: Invitation[] = []
+		const added: Invitation[] = []
 		for (const invitation of invitations) {
-			await pb.collection('invites').create(invitation)
+			try {
+				added.push(await pb.collection('invites').create(invitation))
+			} catch (e) {
+				duplicates.push(invitation)
+			}
 		}
+
+		console.warn('Duplicate invitations:')
+		duplicates.forEach(invitation => console.warn(`* ${invitation.discord_email_or_username}`))
+		console.info('Added invitations:')
+		added.forEach(invitation => console.info(`* ${invitation.discord_email_or_username}`))
 
 		client.destroy()
 		process.exit(0)
