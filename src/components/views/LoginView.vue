@@ -4,12 +4,13 @@ import { type AuthProviderInfo } from 'pocketbase'
 import { usePocketBase } from '../../composables/usePocketBase';
 
 const pb = usePocketBase()
-const redirect = "http://localhost:5173/redirect"
+const redirect = `${import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'}/redirect`
 const providers = ref<AuthProviderInfo[] | undefined>(undefined)
 
 onMounted(async () => {
 	const authMethods = await pb.collection('users').listAuthMethods()
 	providers.value = authMethods.oauth2.providers
+	console.log(`${import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'}/redirect`)
 })
 
 function login(provider: AuthProviderInfo) {

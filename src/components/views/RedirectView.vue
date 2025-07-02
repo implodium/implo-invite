@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 import { usePocketBase } from '../../composables/usePocketBase'
 
 const pb = usePocketBase()
-const redirect = "http://localhost:5173/redirect"
+const redirect = `${import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'}/redirect`
 const params = (new URL(window.location.href)).searchParams
 
 const error = ref<string | undefined>(undefined)

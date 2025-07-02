@@ -9,7 +9,7 @@ import RedirectView from './components/views/RedirectView.vue'
 import PocketBase from 'pocketbase'
 import Party2025 from './components/views/party/Party2025.vue'
 
-const pb = new PocketBase('http://localhost:8090')
+const pb = new PocketBase(import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:8090')
 
 const routes: Readonly<RouteRecordRaw[]> = [
 	{ path: '/', component: HomeView },
@@ -19,7 +19,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
 ]
 
 const router = createRouter({
-	history: createWebHistory(),
+	history: createWebHistory(import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'),
 	routes: routes
 })
 
