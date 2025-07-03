@@ -9,8 +9,9 @@ const { prompt } = enquirer;
 async function main() {
 	const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
 	const token = await promptToken();
+	const apiUrl = await promptAPIURL()
 	const { username, password } = await promptCredentials()
-	const pb = new PocketBase('http://localhost:8090')
+	const pb = new PocketBase(apiUrl)
 	await pb.collection('_superusers')
 		.authWithPassword(username, password)
 	const events = await pb.collection<Event>('events').getFullList()
@@ -94,7 +95,7 @@ async function promptEvent(events: Event[]) {
 }
 
 async function promptToken() {
-	if (process.env.DISCORD_TOKEN) {
+	if (process.env.DISCORD_TOKEN !== undefined) {
 		return process.env.DISCORD_TOKEN;
 	}
 
@@ -105,6 +106,20 @@ async function promptToken() {
 	});
 
 	return token;
+}
+
+async function promptAPIURL() {
+	if (process.env.VITE_API_URL) {
+		return process.env.VITE_API_URL;
+	}
+
+	const { apiUrl } = await prompt<{ apiUrl: string }>({
+		type: "input",
+		name: "apiUrl",
+		message: "API URL: "
+	});
+
+	return apiUrl;
 }
 
 async function promptGuild(guilds: OAuth2Guild[]) {
