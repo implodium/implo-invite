@@ -19,7 +19,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
 ]
 
 const router = createRouter({
-	history: createWebHistory(import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'),
+	history: createWebHistory(),
 	routes: routes
 })
 
