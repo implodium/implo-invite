@@ -229,7 +229,10 @@ const avatar_url = computed(() => {
 		<UModal v-model:open="pollsModalOpen" title="Polls"
 			description="The polls are done in discord. Here is a link to the thread">
 			<template #body>
-				<span>this is a cool link</span>
+				<UButton leading-icon="ic:baseline-discord"
+					href="https://discord.com/channels/388433193638035457/1390330409220571258/1390330413410422804">
+					Discord Thread
+				</UButton>
 			</template>
 		</UModal>
 		<UModal v-model:open="participantsModalOpen" title="Participants"
@@ -251,7 +254,7 @@ const avatar_url = computed(() => {
 			</template>
 		</UModal>
 		<UModal v-model:open="registerModalOpen" title="Register to the Party"
-			description="Enter your details into the form and press submit to register to the Party"
+			description="Enter your details into the form and press submit to register to the Party."
 			:ui="{ body: 'flex gap-5 flex-col' }">
 			<template #body>
 				<UCard v-if="user" :title="user?.name" variant="outline">
