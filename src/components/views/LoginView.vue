@@ -2,10 +2,12 @@
 import { onMounted, ref } from 'vue';
 import { type AuthProviderInfo } from 'pocketbase'
 import { usePocketBase } from '../../composables/usePocketBase';
+import { computed } from 'vue';
 
 const pb = usePocketBase()
 const redirect = `${import.meta.env.VITE_WEB_URL ?? 'http://localhost:5173'}/redirect`
 const providers = ref<AuthProviderInfo[] | undefined>(undefined)
+const discord = computed(() => providers.value?.at(0))
 
 onMounted(async () => {
 	const authMethods = await pb.collection('users').listAuthMethods()
@@ -15,18 +17,19 @@ onMounted(async () => {
 
 function login(provider: AuthProviderInfo) {
 	localStorage.setItem('provider', JSON.stringify(provider))
+	window.location.href = provider.authURL + redirect
 }
 
 </script>
 
 <template>
-	<div>
-		<ul v-if="providers">
-			<li v-for="provider in providers">
-				<a :href="provider.authURL + redirect" @click="login(provider)">{{ provider.name }}</a>
-			</li>
-		</ul>
-		<div v-else>Loading Loign Provider ...</div>
+	<div class="w-screen h-screen flex justify-center items-center">
+		<UButton v-if="discord" icon="ic:baseline-discord" @click="login(discord)" size="xl" :ui="{base: 'text-4xl', leadingIcon: 'size-12'}">Login</UButton>
+		<div v-else class="flex justify-center flex-col items-center">
+			<UIcon name="clarity:no-access-line" class="size-64 text-dimmed" />
+			<div class="text-center">Loading Login Provider...</div>
+			<div class="text-center">If this message does not disappear it means the server is down</div>
+		</div>
 	</div>
 </template>
 

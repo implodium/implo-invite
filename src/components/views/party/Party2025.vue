@@ -82,16 +82,16 @@ const participantTree = computed<TreeItem[]>(() => {
 				},
 				defaultExpanded: true,
 				children: r.registration.others
-				.filter(o => filterRecord(o))
-				.map((o): TreeItem => {
-					return {
-						label: o.name.split("#")[0],
-						icon: 'mdi:person-plus',
-						children: [],
-					}
-				})
+					.filter(o => filterRecord(o))
+					.map((o): TreeItem => {
+						return {
+							label: o.name.split("#")[0],
+							icon: 'mdi:person-plus',
+							children: [],
+						}
+					})
 			}
-	})
+		})
 })
 
 function splitDescription(description: string): { datetime: string, location: string } {
@@ -239,9 +239,9 @@ const avatar_url = computed(() => {
 			<template #body>
 				<header class="flex flex-row justify-between">
 					<div class="flex flex-row gap-1">
-						<Filter v-model:is-active="dinnerFilter" title="Dinner"/>
-						<Filter v-model:is-active="shoppingFilter" title="Shopping"/>
-						<Filter v-model:is-active="overnightFilter" title="Overnight"/>
+						<Filter v-model:is-active="dinnerFilter" title="Dinner" />
+						<Filter v-model:is-active="shoppingFilter" title="Shopping" />
+						<Filter v-model:is-active="overnightFilter" title="Overnight" />
 					</div>
 					<div>
 						{{ filteredParticipantCount }}
@@ -379,6 +379,7 @@ const avatar_url = computed(() => {
 			<h1 class="text-3xl text-dimmed">
 				This could very well be a mistake. Contact the organizer (LebendeMoge) of this event
 			</h1>
+			<UButton size="xl" @click="logout">Logout</UButton>
 		</div>
 	</div>
 </template>
