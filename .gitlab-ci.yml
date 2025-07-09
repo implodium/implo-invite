@@ -34,4 +34,4 @@ deploy:
       - ssh-add ~/.ssh/id_rsa
       - ssh-keyscan $IMPLOVPS_IP >> ~/.ssh/known_hosts  # or your host
   script:
-    - ssh -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
+    - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
