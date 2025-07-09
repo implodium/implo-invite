@@ -269,6 +269,7 @@ const registrationDescription = computed(() => {
 						<Filter v-model:is-active="dinnerFilter" title="Dinner" />
 						<Filter v-model:is-active="shoppingFilter" title="Shopping" />
 						<Filter v-model:is-active="overnightFilter" title="Overnight" />
+						<Filter v-model:is-active="overnightFilter" title="Lunch" />
 					</div>
 					<div>
 						{{ filteredParticipantCount }}
