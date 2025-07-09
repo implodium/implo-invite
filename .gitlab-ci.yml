@@ -1,3 +1,12 @@
+image: docker:24.0.7  # You can use the latest stable version
+
+services:
+  - docker:24.0.7-dind
+
+variables:
+  DOCKER_TLS_CERTDIR: ""  # Required to disable TLS for easier usage
+  DOCKER_HOST: tcp://docker:2375  # Connect to DinD service
+
 stages:
   - build
   - deploy
