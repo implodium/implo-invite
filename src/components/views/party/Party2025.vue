@@ -217,6 +217,30 @@ function logout() {
 const avatar_url = computed(() => {
 	return pb.files.getURL(user.value as any, user.value?.avatar ?? '')
 })
+
+const registrationTitle = computed(() => {
+	if (registration.value === undefined) {
+		return 'Register to the Party'
+	}
+
+	if (registration.value.registration.self.name === '') {
+		return 'Edit Registration'
+	}
+
+	return 'Edit Registration'
+})
+
+const registrationDescription = computed(() => {
+	if (registration.value === undefined) {
+		return 'Enter your details into the form and press submit to register to the Party.'
+	}
+
+	if (registration.value.registration.self.name === '') {
+		return 'Edit your details'
+	}
+
+	return 'Edit your details'
+})
 </script>
 
 <template>
@@ -253,8 +277,7 @@ const avatar_url = computed(() => {
 				<UTree disabled :items="participantTree" />
 			</template>
 		</UModal>
-		<UModal v-model:open="registerModalOpen" title="Register to the Party"
-			description="Enter your details into the form and press submit to register to the Party."
+		<UModal v-model:open="registerModalOpen" :title="registrationTitle" :description="registrationDescription"
 			:ui="{ body: 'flex gap-5 flex-col' }">
 			<template #body>
 				<UCard v-if="user" :title="user?.name" variant="outline">
