@@ -301,11 +301,11 @@ const avatar_url = computed(() => {
 						</div>
 					</template>
 				</UCard>
-				<UTooltip :disabled="plusOneResults.length <= 2" text="You can only add up to 3 extra people">
+				<UTooltip
+					:text="plusOneResults.length <= 2 ? 'Add another person you want to invite' : 'You can only add up to 3 extra people'">
 					<UButton @click="addPerson" :disabled="plusOneResults.length > 2"
-						class="flex justify-center items-center">Add
-						Person
-					</UButton>
+						class="flex justify-center items-center">
+						{{ plusOneResults.length == 0 ? 'Bring a Friend' : 'Bring another Friend' }} </UButton>
 				</UTooltip>
 			</template>
 			<template #footer>
