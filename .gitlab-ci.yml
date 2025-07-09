@@ -8,16 +8,10 @@ variables:
   DOCKER_HOST: tcp://docker:2375  # Connect to DinD service
 
 stages:
-  - build
-  - deploy
+  - build_deploy
 
 build-job:
-  stage: build
+  stage: build_deploy
   script:
     - docker compose build
-
-deploy-job:
-  stage: deploy
-  environment: production
-  script:
     - docker compose push
