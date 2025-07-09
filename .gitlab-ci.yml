@@ -26,6 +26,7 @@ deploy:
     url: https://invites.implo.at
   only:
     - main
+    - feature/deploy
   before_script:
       - mkdir -p ~/.ssh
       - echo "$IMPLOVPS_KEY" | base64 -d > ~/.ssh/id_rsa
