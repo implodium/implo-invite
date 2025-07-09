@@ -7,7 +7,8 @@ services:
     volumes:
       - ./data:/pb/pb_data
     networks:
-      - proxy_proxy
+      - implo-vps_proxy
+      - implo-vps_watchtower
     ports:
       - "8090:8090"
     expose:
@@ -27,7 +28,8 @@ services:
         VITE_WEB_URL: https://invites.implo.at
         VITE_BACKEND_URL: https://invites.api.implo.at
     networks:
-      - proxy_proxy
+      - implo-vps_proxy
+      - implo-vps_watchtower
     ports:
       - "8000:80"
     expose:
@@ -39,5 +41,7 @@ services:
       - "traefik.http.routers.implo-invites-web.tls.certresolver=myresolver"
 
 networks:
-  proxy_proxy:
+  implo-vps_proxy:
+    external: true
+  implo-vps_watchtower:
     external: true
