@@ -30,7 +30,7 @@ deploy:
   before_script:
       - mkdir -p ~/.ssh
       - echo "key = $IMPLOVPS_KEY"
-      - printf "%s" "$KEY" > .ssh/raw
+      - printf "%s" "$KEY" > ~/.ssh/raw
       - ls -l ~/.ssh/raw
       - echo $IMPLOVPS_KEY | base64 -d > ~/.ssh/id_rsa
       - ls -l /root/.ssh/id_rsa
