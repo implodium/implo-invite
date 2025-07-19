@@ -11,13 +11,13 @@ stages:
   # - build_push
   - deploy
 
-docker-build-push:
-  stage: build_push
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  script:
-    - docker compose build
-    - docker compose push
+# docker-build-push:
+#   stage: build_push
+#   before_script:
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+#   script:
+#     - docker compose build
+#     - docker compose push
 
 deploy:
   stage: deploy
