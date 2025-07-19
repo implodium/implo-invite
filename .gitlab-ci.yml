@@ -8,7 +8,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375  # Connect to DinD service
 
 stages:
-  - build_push
+  # - build_push
   - deploy
 
 docker-build-push:
