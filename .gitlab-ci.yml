@@ -12,6 +12,8 @@ stages:
   - deploy
 
 # docker-build-push:
+#   image: docker:24.0.7
+
 #   stage: build_push
 #   before_script:
 #     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
@@ -20,21 +22,22 @@ stages:
 #     - docker compose push
 
 deploy:
-  stage: deploy
-  environment:
-    name: prod
-    url: https://invites.implo.at
-  only:
-    - main
-    - feature/deploy
-  before_script:
-      - mkdir -p ~/.ssh
-      - chmod 700 ~/.ssh
-      - cp "$IMPLOVPS_KEY" ~/.ssh/id_rsa
-      - ls -l /root/.ssh/id_rsa
-      - head -n 1 ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - ssh-keyscan $IMPLOVPS_IP >> ~/.ssh/known_hosts  # or your host
-  script:
-    # - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
-    - ssh -vvv -i ~/.ssh/id_rsa -o IdentitiesOnly=yes $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
+    stage: deploy
+    image: debian:bullseye  # or ubuntu:22.04
+    environment:
+        name: prod
+        url: https://invites.implo.at
+    only:
+        - main
+        - feature/deploy
+    before_script:
+        - mkdir -p /root/.ssh
+        - chmod 700 /root/.ssh
+        - cp "$IMPLOVPS_KEY" /root/.ssh/id_rsa
+        - ls -l /root/.ssh/id_rsa
+        - head -n 1 /root/.ssh/id_rsa
+        - chmod 600 /root/.ssh/id_rsa
+        - ssh-keyscan $IMPLOVPS_IP >> /root/.ssh/known_hosts  # or your host
+    script:
+        # - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
+        - ssh -vvv -i /root/.ssh/id_rsa -o IdentitiesOnly=yes $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
