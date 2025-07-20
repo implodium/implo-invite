@@ -274,10 +274,10 @@ const registrationDescription = computed(() => {
 			<template #body>
 				<header class="flex flex-row justify-between">
 					<div class="flex flex-row gap-1">
-						<Filter v-model:is-active="dinnerFilter" title="Dinner" />
 						<Filter v-model:is-active="shoppingFilter" title="Shopping" />
-						<Filter v-model:is-active="overnightFilter" title="Overnight" />
 						<Filter v-model:is-active="lunchFilter" title="Lunch" />
+						<Filter v-model:is-active="dinnerFilter" title="Dinner" />
+						<Filter v-model:is-active="overnightFilter" title="Overnight" />
 					</div>
 					<div>
 						{{ filteredParticipantCount }}
@@ -295,16 +295,16 @@ const registrationDescription = computed(() => {
 					</template>
 					<template #default>
 						<div class="flex justify-between">
-							{{ info.form.dinner }}
-							<USwitch v-model="formResults.dinner" />
+							{{ info.form.shopping }}
+							<USwitch v-model="formResults.shopping" />
 						</div>
 						<div class="flex justify-between">
 							{{ info.form.lunch }}
 							<USwitch v-model="formResults.lunch" />
 						</div>
 						<div class="flex justify-between">
-							{{ info.form.shopping }}
-							<USwitch v-model="formResults.shopping" />
+							{{ info.form.dinner }}
+							<USwitch v-model="formResults.dinner" />
 						</div>
 						<div class="flex justify-between">
 							{{ info.form.overnight }}
@@ -324,16 +324,16 @@ const registrationDescription = computed(() => {
 							<UInput v-model="plusOne.name" />
 						</div>
 						<div class="flex justify-between">
+							{{ info.form.shopping }}
+							<USwitch v-model="plusOne.shopping" />
+						</div>
+						<div class="flex justify-between">
 							{{ info.form.lunch }}
 							<USwitch v-model="plusOne.lunch" />
 						</div>
 						<div class="flex justify-between">
 							{{ info.form.dinner }}
 							<USwitch v-model="plusOne.dinner" />
-						</div>
-						<div class="flex justify-between">
-							{{ info.form.shopping }}
-							<USwitch v-model="plusOne.shopping" />
 						</div>
 						<div class="flex justify-between">
 							{{ info.form.overnight }}
