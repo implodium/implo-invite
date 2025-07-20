@@ -13,6 +13,7 @@ export type User = {
 export type FormResult = {
 	name: string,
 	dinner: boolean,
+	lunch: boolean,
 	overnight: boolean,
 	shopping: boolean
 }

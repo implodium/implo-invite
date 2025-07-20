@@ -23,8 +23,10 @@ const pollsModalOpen = ref(false)
 const shoppingFilter = ref<boolean>(false)
 const overnightFilter = ref<boolean>(false)
 const dinnerFilter = ref<boolean>(false)
-const formResults = ref({
+const lunchFilter = ref<boolean>(false)
+const formResults = ref<FormResult>({
 	name: "",
+	lunch: false,
 	dinner: false,
 	overnight: false,
 	shopping: false
@@ -56,7 +58,10 @@ const stepperTimeStamps = computed<StepperItem[]>(() => {
 })
 
 function filterRecord(formResult: FormResult): boolean {
-	return filterField(formResult.dinner, dinnerFilter.value) && filterField(formResult.overnight, overnightFilter.value) && filterField(formResult.shopping, shoppingFilter.value)
+	return filterField(formResult.dinner, dinnerFilter.value)
+		&& filterField(formResult.overnight, overnightFilter.value)
+		&& filterField(formResult.shopping, shoppingFilter.value)
+		&& filterField(formResult.lunch, lunchFilter.value)
 }
 
 function filterField(value: boolean, filter: boolean): boolean {
@@ -105,6 +110,7 @@ function addPerson() {
 	plusOneResults.value.push({
 		name: "",
 		dinner: false,
+		lunch: false,
 		overnight: false,
 		shopping: false
 	})
@@ -160,6 +166,7 @@ async function deleteRegistration() {
 
 	formResults.value = {
 		name: "",
+		lunch: false,
 		dinner: false,
 		overnight: false,
 		shopping: false
@@ -176,6 +183,7 @@ onMounted(async () => {
 
 	formResults.value = registration.value?.registration.self ?? {
 		name: "",
+		lunch: false,
 		dinner: false,
 		overnight: false,
 		shopping: false
@@ -269,7 +277,7 @@ const registrationDescription = computed(() => {
 						<Filter v-model:is-active="dinnerFilter" title="Dinner" />
 						<Filter v-model:is-active="shoppingFilter" title="Shopping" />
 						<Filter v-model:is-active="overnightFilter" title="Overnight" />
-						<Filter v-model:is-active="overnightFilter" title="Lunch" />
+						<Filter v-model:is-active="lunchFilter" title="Lunch" />
 					</div>
 					<div>
 						{{ filteredParticipantCount }}
@@ -291,6 +299,10 @@ const registrationDescription = computed(() => {
 							<USwitch v-model="formResults.dinner" />
 						</div>
 						<div class="flex justify-between">
+							{{ info.form.lunch }}
+							<USwitch v-model="formResults.lunch" />
+						</div>
+						<div class="flex justify-between">
 							{{ info.form.shopping }}
 							<USwitch v-model="formResults.shopping" />
 						</div>
@@ -310,6 +322,10 @@ const registrationDescription = computed(() => {
 						<div class="flex justify-between">
 							{{ info.form.name }}
 							<UInput v-model="plusOne.name" />
+						</div>
+						<div class="flex justify-between">
+							{{ info.form.lunch }}
+							<USwitch v-model="plusOne.lunch" />
 						</div>
 						<div class="flex justify-between">
 							{{ info.form.dinner }}

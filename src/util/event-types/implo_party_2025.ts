@@ -7,6 +7,7 @@ export interface ImploParty2025 {
 
 export interface Form {
     name:      string;
+    lunch:     string;
     dinner:    string;
     shopping:  string;
     overnight: string;
