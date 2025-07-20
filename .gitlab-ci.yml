@@ -30,11 +30,9 @@ deploy:
   before_script:
       - mkdir -p ~/.ssh
       - chmod 700 ~/.ssh
-      - echo $IMPLOVPS_KEY | base64 -d > ~/.ssh/id_rsa
+      - cp "$IMPLOVPS_KEY" ~/.ssh/id_rsa
       - ls -l /root/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
-      - eval $(ssh-agent -s)
-      - ssh-add ~/.ssh/id_rsa
       - ssh-keyscan $IMPLOVPS_IP >> ~/.ssh/known_hosts  # or your host
   script:
     # - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
