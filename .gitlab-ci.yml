@@ -32,6 +32,7 @@ deploy:
       - chmod 700 ~/.ssh
       - cp "$IMPLOVPS_KEY" ~/.ssh/id_rsa
       - ls -l /root/.ssh/id_rsa
+      - head -n 1 ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - ssh-keyscan $IMPLOVPS_IP >> ~/.ssh/known_hosts  # or your host
   script:
