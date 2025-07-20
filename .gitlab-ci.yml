@@ -8,37 +8,13 @@ variables:
   DOCKER_HOST: tcp://docker:2375  # Connect to DinD service
 
 stages:
-  # - build_push
-  - deploy
+  - build_push
 
-# docker-build-push:
-#   image: docker:24.0.7
-
-#   stage: build_push
-#   before_script:
-#     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-#   script:
-#     - docker compose build
-#     - docker compose push
-
-deploy:
-    stage: deploy
-    image: debian:bullseye  # or ubuntu:22.04
-    environment:
-        name: prod
-        url: https://invites.implo.at
-    only:
-        - main
-        - feature/deploy
+docker-build-push:
+    image: docker:24.0.7
+    stage: build_push
     before_script:
-        - apt-get update && apt-get install -y openssh-client
-        - mkdir -p /root/.ssh
-        - chmod 700 /root/.ssh
-        - cp "$IMPLOVPS_KEY" /root/.ssh/id_rsa
-        - ls -l /root/.ssh/id_rsa
-        - head -n 1 /root/.ssh/id_rsa
-        - chmod 600 /root/.ssh/id_rsa
-        - ssh-keyscan -t ecdsa $IMPLOVPS_IP >> /root/.ssh/known_hosts  # or your host
+        - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     script:
-        # - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
-        - ssh -vvv -i /root/.ssh/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+sk-ecdsa-sha2-nistp256@openssh.com $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
+        - docker compose build
+        - docker compose push
