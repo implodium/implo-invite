@@ -9,29 +9,15 @@ variables:
 
 stages:
   - build_push
-  - deploy
 
 docker-build-push:
-  stage: build_push
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-  script:
-    - docker compose build
-    - docker compose push
-
-deploy:
-  stage: deploy
-  environment:
-    name: prod
-    url: https://invites.implo.at
-  only:
-    - main
-  before_script:
-      - mkdir -p ~/.ssh
-      - echo "$IMPLOVPS_KEY" | base64 -d > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - eval $(ssh-agent -s)
-      - ssh-add ~/.ssh/id_rsa
-      - ssh-keyscan $IMPLOVPS_IP >> ~/.ssh/known_hosts  # or your host
-  script:
-    - ssh -vvv -o StrictHostKeyChecking=no $IMPLOVPS_USERNAME@$IMPLOVPS_IP "cd $PROJECT_HOME && docker compose pull && docker compose up -d --force-recreate"
+    image: docker:24.0.7
+    stage: build_push
+    before_script:
+        - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    script:
+        - docker compose build
+        - docker compose push
+    only:
+        - main
+        - feature/deploy
