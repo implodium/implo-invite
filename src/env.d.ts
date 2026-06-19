@@ -1,6 +1,8 @@
 interface ImportMetaEnv {
 	readonly BETTER_AUTH_SECRET: string
 	readonly DB_FILE_NAME: string
+	readonly DISCORD_CLIENT_ID: string
+	readonly DISCORD_CLIENT_SECRET: string
 }
 
 interface ImportMeta {

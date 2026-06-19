@@ -1,4 +1,10 @@
 ---
+export const prerender = false
+import type { username } from "better-auth/plugins"
+import { UserMenu } from "../components/UserMenu"
+const user = Astro.locals.user
+
+
 ---
 
 <html lang="en">
@@ -12,5 +18,6 @@
 	</head>
 	<body>
 		<h1>Astro</h1>
+		<UserMenu client:load username={user?.name ?? "???"} />
 	</body>
 </html>
