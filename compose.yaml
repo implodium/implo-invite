@@ -1,0 +1,12 @@
+services:
+  implo-invite:
+    build: .
+    image: implo-invite
+    ports:
+      - 8080:4321
+    volumes:
+      - ./storage/local.db:/local.db
+    environment:
+      - BETTER_AUTH_SECRET=zPdRkFkUsqREoyYVB7ZqGf+82EiweVdTzH7A6sf0whU=
+      - DB_FILE_NAME=file:local.db
+      - BETTER_AUTH_URL=http://localhost4321

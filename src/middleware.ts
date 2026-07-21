@@ -1,23 +1,43 @@
-import { auth } from "./utils/auth";
+import { auth, checkAuthFor } from "./utils/auth";
 import { defineMiddleware } from "astro:middleware";
 
 export const onRequest = defineMiddleware(async (context, next) => {
+	console.log(context.url.pathname)
 	const isAuthed = await auth.api
 		.getSession({
 			headers: context.request.headers,
 		})
 
-	if (isAuthed) {
+	const inLogin = context.url.pathname === "/login" || context.url.pathname.startsWith("/api/auth")
+
+	if (context.url.pathname === '/403') {
+		return next()
+	}
+
+	if (inLogin) {
+		return next()
+	}
+
+	if (!isAuthed) {
+		return context.redirect("/login");
+	}
+
+	if (context.url.pathname.startsWith("/party/2026")) {
+		const checkResult = await checkAuthFor(context.request.headers, 'ImploParty2026')
+
+		console.log(checkResult)
+
+		if (checkResult !== 'ok') {
+			return context.redirect("/403");
+		}
+
 		context.locals.user = isAuthed.user;
 		context.locals.session = isAuthed.session;
 		return next();
-	} else {
-		context.locals.user = null;
-		context.locals.session = null;
-		if (context.url.pathname === "/login" || context.url.pathname.startsWith("/api/auth")) {
-			return next();
-		} else {
-			return context.redirect("/login");
-		}
 	}
+
+
+	context.locals.user = isAuthed.user;
+	context.locals.session = isAuthed.session;
+	return next();
 });

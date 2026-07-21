@@ -1,0 +1,24 @@
+---
+export const prerender = false;
+import DefaultLayout from "../../../layouts/Default.astro";
+import { Registration } from '../../../components/party/2026/Registration'
+import { actions } from "astro:actions";
+
+const eventId = "ImploParty2026"
+const user = Astro.locals.user ? Astro.locals.user : Astro.redirect('/login')
+const registrationResponse = await Astro.callAction(actions.registration.getRegistraiton, { eventId })
+const registration = registrationResponse
+---
+
+<DefaultLayout title="Implo Party Invite 2026">
+	<div class="viewport registration">
+		<main class="window">
+			{ user instanceof Response ? <></> : <Registration client:load user={user} registration={registration.data} />}
+		</main>
+	</div>
+</DefaultLayout>
+
+<style is:global lang="scss">
+	@use '../../../styles/pixel/pixel';
+	@use '../../../styles/pixel/registration';
+</style>

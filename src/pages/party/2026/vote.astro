@@ -1,0 +1,52 @@
+---
+export const prerender = false;
+import DefaultLayout from "../../../layouts/Default.astro";
+import { Vote } from "../../../components/party/2026/Vote";
+
+const restaurants = [
+	"Dao",
+	"Pho hanoi",
+	"Lillys Kitchen",
+	"Miyako Ramen",
+	"Scechuan Impressions",
+	"Ebisu Sushi",
+	"Ichigo Ichie",
+	"Zushi Market",
+	"Holy",
+	"La Ruffa",
+	"Il Peskatiore",
+	"Surace",
+	"Losteria",
+	"Donauwirtinnen (Pizza)",
+	"Casa Corrado",
+	"Sorbas",
+	"Tamu Sana",
+	"Iya zaman",
+	"Bratwurst Gloeckerl",
+	"Lisl",
+	"Station 183",
+	"Le Burger",
+	"Glorious Bastard",
+	"Subway",
+	"Front Food",
+	"Deli Linz",
+	"Jack the Ripperl",
+	"Burgerista",
+	"New Namaste",
+	"Spice Club"
+]
+
+---
+
+<DefaultLayout title="Implo Party Invite 2026">
+	<div class="viewport">
+		<main class="window">
+			<Vote client:load restaurants={restaurants} />
+		</main>
+	</div>
+</DefaultLayout>
+
+<style is:global lang="scss">
+	@use '../../../styles/pixel/pixel';
+	@use '../../../styles/pixel/vote';
+</style>
