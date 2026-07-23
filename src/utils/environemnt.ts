@@ -32,8 +32,6 @@ export function getRuntimeEnvs() {
 			DISCORD_CLIENT_SECRET: process.env['DISCORD_CLIENT_SECRET'],
 		}
 
-	console.log(envs)
-
 	const parsedEnvs = EnvsSchema.safeParse(envs)
 
 	if (!parsedEnvs.success) {
