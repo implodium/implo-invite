@@ -95,6 +95,7 @@ export function Vote(props: Props) {
 		</header>
 
 		<h2>{VoteConfig.message()}</h2>
+		<h3>Rank from priority 1 (highest) to 5 (lowest)</h3>
 		<Show when={error() !== undefined}>
 			<h2 style={{ color: 'red' }}>
 				{error()}
