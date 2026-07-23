@@ -25,11 +25,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	if (context.url.pathname.startsWith("/party/2026")) {
 		const checkResult = await checkAuthFor(context.request.headers, 'ImploParty2026')
 
-		console.log(checkResult)
-
 		if (checkResult !== 'ok') {
 			return context.redirect("/403");
 		}
+
+		if (context.url.pathname === '/party/2026/') {
+			return context.redirect("/party/2026/registration");
+		}
+
 
 		context.locals.user = isAuthed.user;
 		context.locals.session = isAuthed.session;
