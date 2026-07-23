@@ -19,7 +19,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	}
 
 	if (!isAuthed) {
-		return context.redirect("/login");
+		return context.redirect(`/login?redirect=${context.url.pathname}`);
 	}
 
 	if (context.url.pathname.startsWith("/party/2026")) {
