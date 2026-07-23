@@ -4,6 +4,7 @@ import { actions } from "astro:actions";
 import type { z } from "astro/zod";
 import type { RegistrationOptionsSchema } from "../../../utils/shared_types";
 import { Modal } from "./Modal";
+import { authClient } from "../../../utils/auth_client";
 
 type Person = {
 	name: string,
@@ -148,18 +149,27 @@ export function Registration(props: RegistrationProps) {
 		}, 1000)
 	}
 
+	async function logout() {
+		await authClient.signOut()
+		window.location.reload()
+
+	}
+
 
 	return <div class="registration-container">
-		<h1>Party Registration</h1>
+		<header>
+			<h1>Party Registration</h1>
+			<Button onclick={logout}><i class="hn hn-logout"></i></Button>
+		</header>
 
 		<div class="table-container">
 			<table class="registration-table">
 				<thead>
 					<tr class="table-row">
-						<th>Name <Info text={"Your Name. If you want to add a +1 press the button"}/></th>
-						<th>Shopping <Info text={"Joins Grocery Trip"}/> </th>
-						<th>Lunch <Info text={"Requires Lunch Reservation"}/></th> <th>Dinner <Info text={"Requries Dinner Reservation"}/></th>
-						<th>Overnight <Info text={"Stays through the night"}/></th>
+						<th>Name <Info text={"Your Name. If you want to add a +1 press the button"} /></th>
+						<th>Shopping <Info text={"Joins Grocery Trip"} /> </th>
+						<th>Lunch <Info text={"Requires Lunch Reservation"} /></th> <th>Dinner <Info text={"Requries Dinner Reservation"} /></th>
+						<th>Overnight <Info text={"Stays through the night"} /></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -182,12 +192,12 @@ export function Registration(props: RegistrationProps) {
 		</div>
 
 		<Button fullWidth onclick={() => register()} disabled={registrationButtonDisabled()}>
-		<Show when={alreadyRegistered()}>
-			Update Registration
-		</Show>
-		<Show when={!alreadyRegistered()}>
-			Register
-		</Show>
+			<Show when={alreadyRegistered()}>
+				Update Registration
+			</Show>
+			<Show when={!alreadyRegistered()}>
+				Register
+			</Show>
 		</Button>
 
 		<Modal show={showModal()}>  {modalText()} </Modal>

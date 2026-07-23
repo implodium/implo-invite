@@ -1,6 +1,11 @@
+import { onMount } from "solid-js"
 import { authClient } from "../utils/auth_client"
 
 export function Login() {
+
+	onMount(() => {
+		loginViaDiscord()
+	})
 
 	async function loginViaDiscord() {
 		const urlParams = new URLSearchParams(window.location.search)
@@ -13,9 +18,6 @@ export function Login() {
 	}
 
 	return (
-		<div>
-			<h1>Login</h1>
-			<button onClick={() => loginViaDiscord()}>discord</button>
-		</div>
+		<></>
 	)
 }

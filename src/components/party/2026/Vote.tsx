@@ -3,6 +3,7 @@ import { Button } from "./Button";
 import { actions } from "astro:actions";
 import { VoteConfig } from "../../../config/vote";
 import { Modal } from "./Modal";
+import { authClient } from "../../../utils/auth_client";
 
 export type Props = {
 	restaurants: string[]
@@ -81,8 +82,18 @@ export function Vote(props: Props) {
 		}, 1000)
 	}
 
+	async function logout() {
+		await authClient.signOut()
+		window.location.reload()
+	}
+
+
 	return <div class="vote">
-		<h1>Vote</h1>
+		<header>
+			<h1>Vote</h1>
+			<Button onclick={logout}><i class="hn hn-logout"></i></Button>
+		</header>
+
 		<h2>{VoteConfig.message()}</h2>
 		<Show when={error() !== undefined}>
 			<h2 style={{ color: 'red' }}>

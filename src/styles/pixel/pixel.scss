@@ -85,6 +85,10 @@ $xl: 1280px;
 	cursor: pointer;
 }
 
+.btn-primary i {
+	color: var(--color-primary-foreground);
+}
+
 .btn-ghost {
 	@include mixins.border-2(transparent, 1px);
 	cursor: pointer;
@@ -122,13 +126,15 @@ section.banner {
 .tooltip {
 	position: relative;
 	display: inline-block;
-	border-bottom: 1px dotted black; /* Add dots under the hoverable text */
+	border-bottom: 1px dotted black;
+	/* Add dots under the hoverable text */
 	cursor: pointer;
 }
 
 /* Tooltip text */
 .tooltiptext {
-	visibility: hidden; /* Hidden by default */
+	visibility: hidden;
+	/* Hidden by default */
 	width: 130px;
 	background-color: black;
 	color: #ffffff;
@@ -136,7 +142,8 @@ section.banner {
 	padding: 5px 0;
 	border-radius: 6px;
 	position: absolute;
-	z-index: 1; /* Ensure tooltip is displayed above content */
+	z-index: 1;
+	/* Ensure tooltip is displayed above content */
 }
 
 .tooltiptext-right {
@@ -148,12 +155,14 @@ section.banner {
 	width: 130px;
 	bottom: 100%;
 	left: 65%;
-	margin-left: -65px; /* Use half of the width (130/2 = 65), to center the tooltip */
+	margin-left: -65px;
+	/* Use half of the width (130/2 = 65), to center the tooltip */
 }
 
 /* Show the tooltip text on hover */
 .tooltip:hover .tooltiptext {
-	visibility: visible; }
+	visibility: visible;
+}
 
 .modal {
 	@include mixins.border-4(var(--color-accent-foreground));
@@ -171,5 +180,3 @@ section.banner {
 .modal-open {
 	display: block;
 }
-
-
