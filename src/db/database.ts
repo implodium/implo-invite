@@ -1,6 +1,8 @@
 import { drizzle } from "drizzle-orm/libsql";
+import { getRuntimeEnvs } from "../utils/environemnt";
 
-const db = drizzle(import.meta.env.DB_FILE_NAME)
+const envs = getRuntimeEnvs()
+const db = drizzle(envs.DB_FILE_NAME)
 
 export {
 	db,
