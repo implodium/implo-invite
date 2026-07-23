@@ -1,36 +1,27 @@
-# Build stage
-FROM node:22-alpine AS builder
-
+FROM node:alpine AS base
 WORKDIR /app
 
-# Install dependencies first for better Docker layer caching
+# By copying only the package.json and package-lock.json here, we ensure that the following `-deps` steps are independent of the source code.
+# Therefore, the `-deps` steps will be skipped if only the source code changes.
 COPY package.json package-lock.json ./
-RUN npm ci
 
-# Copy application source
+FROM base AS prod-deps
+RUN npm install --omit=dev
+
+FROM base AS build-deps
+RUN npm install
+
+FROM build-deps AS build
+ARG APP_VERSION="local"
+ENV APP_VERSION=${APP_VERSION}
 COPY . .
-
-# Build Astro application
 RUN npm run build
 
+FROM base AS runtime
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 
-# Production stage
-FROM node:22-alpine AS runner
-
-WORKDIR /app
-
-ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=4321
-
-# Copy the built Astro application
-COPY --from=builder /app/dist ./dist
-
-# The Node adapter may require runtime dependencies
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
 EXPOSE 4321
-
-# Start Astro's Node server
 CMD ["node", "./dist/server/entry.mjs"]

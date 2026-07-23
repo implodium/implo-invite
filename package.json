@@ -19,7 +19,6 @@
 		"@tailwindcss/vite": "^4.3.2",
 		"astro": "^7.1.1",
 		"better-auth": "^1.6.11",
-		"discord.js": "^14.27.0",
 		"dotenv": "^17.4.2",
 		"drizzle-orm": "^0.45.2",
 		"enquirer": "^2.4.1",
@@ -29,7 +28,8 @@
 	},
 	"devDependencies": {
 		"drizzle-kit": "^0.31.10",
-		"tsx": "^4.22.0"
+		"tsx": "^4.22.0",
+		"discord.js": "^14.27.0"
 	},
 	"allowScripts": {
 		"esbuild@0.18.20": true,

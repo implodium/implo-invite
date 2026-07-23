@@ -14,6 +14,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		return next()
 	}
 
+	if (context.url.pathname === '/version') {
+		return next()
+	}
+
+
 	if (inLogin) {
 		return next()
 	}
