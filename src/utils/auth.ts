@@ -15,7 +15,8 @@ export const auth = betterAuth({
 			enabled: true,
 			clientId: env.DISCORD_CLIENT_ID,
 			clientSecret: env.DISCORD_CLIENT_SECRET,
-		}
+			prompt: 'consent',
+		},
 	}
 })
 
