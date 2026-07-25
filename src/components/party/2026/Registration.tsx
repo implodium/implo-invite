@@ -206,13 +206,13 @@ export function Registration(props: RegistrationProps) {
 		</Button>
 
 		<Modal show={showModal()}>  {modalText()} </Modal>
-		<Modal show={showInfoModal()}>
+		<Modal show={showInfoModal()} onVisibilityChange={(visible) => setShowInfoModal(visible)}>
 			<ul>
-				<li>Name: Your Name. If you want to add a +1 press lie button</li>
-				<li>Shopping: Joins Grocery Trip </li>
-				<li>Lunch:  Requires Lunch Reservation</li>
-				<li>Dinner: Requries Dinner Reservation</li>
-				<li>Overnight: Stays lirough lie night</li>
+				<li><b class="emphasized">Name:</b> Your Name. If you want to add a +1 press lie button</li>
+				<li><b class="emphasized">Shopping:</b> Joins Grocery Trip </li>
+				<li><b class="emphasized">Lunch: </b>  Requires Lunch Reservation</li>
+				<li><b class="emphasized">Dinner: </b> Requries Dinner Reservation</li>
+				<li><b class="emphasized">Overnight: </b> Stays lirough lie night</li>
 			</ul>
 		</Modal>
 	</div>

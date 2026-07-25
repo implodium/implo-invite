@@ -34,8 +34,7 @@
 		font-size: 1.5rem;
 	}
 
-	@media (max-width: media.$sm) {
-	}
+	@media (max-width: media.$sm) {}
 }
 
 .registration-container {
@@ -82,4 +81,8 @@ input {
 input.name-display {
 	text-align: center;
 
+}
+
+.emphasized {
+	color: var(--color-primary);
 }
