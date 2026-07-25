@@ -31,6 +31,7 @@ export function Registration(props: RegistrationProps) {
 	})
 
 	const [showModal, setShowModal] = createSignal(false)
+	const [showInfoModal, setShowInfoModal] = createSignal(false)
 	const [modalText, setModalText] = createSignal("")
 	const [alreadyRegistered, setAlreadyRegistered] = createSignal(props.registration ? true : false)
 	const registrationButtonDisabled = () => {
@@ -128,16 +129,8 @@ export function Registration(props: RegistrationProps) {
 		})
 	}
 
-	function Info(props: { text: string, direction?: 'top' | 'right', color?: string }) {
-		const direction = () => props.direction ?? 'top'
-
-		return <div class="tooltip">
-			<span
-				class="tooltiptext"
-				classList={{ 'tooltiptext-top': direction() === 'top', 'tooltiptext-right': direction() === 'right' }}
-			>{props.text}</span>
-			<i class="hn hn-info-circle" style={props.color ? { color: props.color } : {}}></i>
-		</div>
+	function Info() {
+		return <i class="hn hn-info-circle" onclick={() => openInfoModal()}></i>
 	}
 
 	function openModal(text: string) {
@@ -149,6 +142,17 @@ export function Registration(props: RegistrationProps) {
 		}, 1000)
 	}
 
+	function openInfoModal() {
+		setShowInfoModal(true)
+
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') {
+				setShowInfoModal(false)
+			}
+		}, { once: true })
+	}
+
+
 	async function logout() {
 		await authClient.signOut()
 		window.location.reload()
@@ -156,7 +160,7 @@ export function Registration(props: RegistrationProps) {
 	}
 
 
-	return <div class="registration-container">
+	return <div class="registration-container registration">
 		<header>
 			<h1>Party Registration</h1>
 			<Button onclick={logout}><i class="hn hn-logout"></i></Button>
@@ -166,10 +170,11 @@ export function Registration(props: RegistrationProps) {
 			<table class="registration-table">
 				<thead>
 					<tr class="table-row">
-						<th>Name <Info text={"Your Name. If you want to add a +1 press the button"} /></th>
-						<th>Shopping <Info text={"Joins Grocery Trip"} /> </th>
-						<th>Lunch <Info text={"Requires Lunch Reservation"} /></th> <th>Dinner <Info text={"Requries Dinner Reservation"} /></th>
-						<th>Overnight <Info text={"Stays through the night"} /></th>
+						<th>Name <Info /></th>
+						<th>Shopping <Info /> </th>
+						<th>Lunch <Info /></th>
+						<th>Dinner <Info /></th>
+						<th>Overnight <Info /></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -201,5 +206,14 @@ export function Registration(props: RegistrationProps) {
 		</Button>
 
 		<Modal show={showModal()}>  {modalText()} </Modal>
+		<Modal show={showInfoModal()}>
+			<ul>
+				<li>Name: Your Name. If you want to add a +1 press lie button</li>
+				<li>Shopping: Joins Grocery Trip </li>
+				<li>Lunch:  Requires Lunch Reservation</li>
+				<li>Dinner: Requries Dinner Reservation</li>
+				<li>Overnight: Stays lirough lie night</li>
+			</ul>
+		</Modal>
 	</div>
 }
