@@ -14,7 +14,7 @@ $xl: 1280px;
 	}
 
 	@media (max-width: $sm) {
-		height: 100vh;
+		height: calc(100vh - 2rem);
 		width: 100vw;
 	}
 
