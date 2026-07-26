@@ -67,6 +67,7 @@ export function Vote(props: Props) {
 			.map(restaurant => <>
 				<li
 					style={{ cursor: "pointer", "list-style": "none" }}
+					classList={{'selected-restaurant': selected().includes(restaurant)}}
 					onclick={() => toggleSelected(restaurant)}
 				>[{selected().indexOf(restaurant) + 1}] {restaurant}</li>
 			</>)
