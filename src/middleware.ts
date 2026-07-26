@@ -1,5 +1,6 @@
 import { auth, checkAuthFor } from "./utils/auth";
 import { defineMiddleware } from "astro:middleware";
+import { getRuntimeEnvs } from "./utils/environemnt";
 
 export const onRequest = defineMiddleware(async (context, next) => {
 	console.log(context.url.pathname)
@@ -31,6 +32,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		const checkResult = await checkAuthFor(context.request.headers, 'ImploParty2026')
 
 		if (checkResult !== 'ok') {
+			return context.redirect("/403");
+		}
+
+		if (context.url.pathname === '/party/2026/admin' && isAuthed.user.id !== getRuntimeEnvs().ADMIN_ID) {
 			return context.redirect("/403");
 		}
 

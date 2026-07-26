@@ -1,0 +1,102 @@
+---
+import { eq } from "drizzle-orm";
+import { db } from "../../../db/database";
+import { Participant, Event } from "../../../db/schema";
+import { user } from "../../../db/auth-schema";
+import type { ImploParty2026EventExtra } from "../../../utils/shared_types";
+import { VoteConfig } from "../../../config/vote";
+import { ParticipantList } from "../../../components/party/2026/admin/ParticipantList";
+
+export const prerender = false;
+
+const participants = await db.select().from(Participant).where(eq(Participant.event, 'ImploParty2026'));
+const participantsWithName = await Promise.all( participants.map(async (participant) => {
+	const usr = await db.select().from(user).where(eq(user.id, participant.user ?? '')).get();
+	return { ...participant, name: usr?.name };
+}))
+
+type PointEntry = {
+	user: string,
+	points: number
+}
+
+const event = await db.select().from(Event).where(eq(Event.id, 'ImploParty2026')).get()
+const exteDetails: ImploParty2026EventExtra = event?.extra as ImploParty2026EventExtra
+
+const userIdToName = new Map(await Promise.all(
+	Object.keys(exteDetails.votes ?? {})
+	.map(async (id): Promise<[string, string | undefined]> => [id, (await getUserById(id))?.name])
+))
+
+const entriesPerRestaurant = Object.entries(exteDetails.votes ?? {})
+.reduce((acc, [user, ranking]) => {
+	ranking.forEach((restaurant, index) => {
+		const currentEntries = acc.get(restaurant) ?? []
+		const userPoints = (VoteConfig.maximumVoteCount) - index
+		const userName = userIdToName.get(user)
+		currentEntries.push({ user: userName ?? user, points: userPoints})
+		acc.set(restaurant, currentEntries)
+	})
+
+	return acc;
+}, new Map<string, PointEntry[]>())
+
+
+async function getUserById(userId: string) {
+	const usr = await db.select().from(user).where(eq(user.id, userId)).get();
+	return usr;
+}
+
+async function totalCount(entries: PointEntry[]) {
+	return entries.reduce((acc, entry) => acc + entry.points, 0);
+}
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Admin</title>
+	</head>
+	<body class="viewport admin">
+		<main class="window">
+			<h1>Admin</h1>
+			<section>
+				<h2>Participants</h2>
+				<hr/>
+				<ul class="sqare">
+					<ParticipantList client:load participants={participantsWithName} />
+				</ul>
+			</section>
+			<section>
+				<h2>Votes</h2>
+				<hr/>
+				<ul class="ordered">
+					{
+						Array.from(entriesPerRestaurant.entries()).map(([restaurant, entries]) => (
+							<li>
+								<h3>{restaurant}: {totalCount(entries)}</h3>
+								<ul class="nomark">
+									{
+										entries.map((entry) => (
+											<li>{entry.user}: {entry.points}</li>
+										))
+									}
+								</ul>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+
+	</body>
+</html>
+
+
+<style lang="scss">
+	@use '../../../styles/pixel/pixel';
+	@use '../../../styles/pixel/admin';
+</style>
+

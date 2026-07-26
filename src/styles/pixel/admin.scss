@@ -1,0 +1,71 @@
+@use './media';
+@use './mixins';
+
+.admin.viewport {
+	gap: 1rem;
+	flex-direction: column;
+	font-size: 1.5rem;
+}
+
+.admin .window {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 1rem;
+	padding: 4rem;
+	max-height: 100vh;
+
+	@media (min-width: media.$sm) {
+		@include mixins.border-4(var(--color-accent-foreground));
+		flex-direction: column;
+	}
+
+	@media (max-width: media.$sm) {
+		height: calc(100vh - 2rem);
+		width: calc(100vw - 2rem);
+		flex-direction: column;
+	}
+}
+
+.admin .window section {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem
+}
+
+.admin ul.nomark {
+	list-style: none;
+	list-style-position: inside;
+}
+
+.admin ul.sqare {
+	list-style: square;
+	list-style-position: inside;
+
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.admin ul h3,
+.admin ul ::marker {
+	display: inline-block;
+	color: var(--color-primary);
+	list-style: square;
+	list-style-position: inside;
+
+}
+
+.admin ul.ordered {
+	list-style: decimal;
+	list-style-position: inside;
+
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.admin h1 {
+	color: var(--color-primary-foreground);
+}
