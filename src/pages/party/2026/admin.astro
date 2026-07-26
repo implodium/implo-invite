@@ -47,8 +47,12 @@ async function getUserById(userId: string) {
 	return usr;
 }
 
-async function totalCount(entries: PointEntry[]) {
+function totalCount(entries: PointEntry[]) {
 	return entries.reduce((acc, entry) => acc + entry.points, 0);
+}
+
+function entryComperator([_1, entries]: [string, PointEntry[]], [_2, otherEntries]: [string, PointEntry[]]) {
+	return totalCount(otherEntries) - totalCount(entries)
 }
 
 ---
@@ -74,7 +78,7 @@ async function totalCount(entries: PointEntry[]) {
 				<hr/>
 				<ul class="ordered">
 					{
-						Array.from(entriesPerRestaurant.entries()).map(([restaurant, entries]) => (
+						Array.from(entriesPerRestaurant.entries()).toSorted(entryComperator).map(([restaurant, entries]) => (
 							<li>
 								<h3>{restaurant}: {totalCount(entries)}</h3>
 								<ul class="nomark">
