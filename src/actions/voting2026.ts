@@ -6,7 +6,7 @@ import { checkAuthFor, auth } from "../utils/auth"
 import { z } from "astro/zod"
 import { handleCheckResult } from "./util"
 import { Event } from "../db/schema"
-import { ImploParty2026EventExtra } from "../utils/shared_types"
+import type { ImploParty2026EventExtra } from "../utils/shared_types"
 
 export const voting2026 = {
 	submitVote: defineAction({
