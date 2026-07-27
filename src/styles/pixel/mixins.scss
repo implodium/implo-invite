@@ -1,0 +1,41 @@
+@use './clipPaths';
+
+@mixin border-4($color, $width: 4px) {
+	clip-path: var(--pixel-clip-path-4);
+	position: relative;
+	border: $width solid transparent;
+
+	&::after {
+		content: "";
+		position: absolute;
+		clip-path: var(--pixel-clip-path-after-4);
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: $color;
+		display: block;
+		pointer-events: none;
+		margin: -4px;
+	}
+}
+
+@mixin border-2($color, $width: 2px) {
+	clip-path: var(--pixel-clip-path-2);
+	position: relative;
+	border: $width solid transparent;
+
+	&::after {
+		content: "";
+		position: absolute;
+		clip-path: var(--pixel-clip-path-after-2);
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: $color;
+		display: block;
+		pointer-events: none;
+		margin: -4px;
+	}
+}

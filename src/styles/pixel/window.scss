@@ -1,0 +1,37 @@
+@use './mixins';
+
+$sm: 640px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
+
+.a4 {
+	height: auto;
+	aspect-ratio: 1.5/1;
+}
+
+.window {
+	@media (min-width: $sm) {
+		@include mixins.border-4(var(--color-accent-foreground));
+		flex-direction: column;
+	}
+
+	@media (max-width: $sm) {
+		height: calc(100vh - 2rem);
+		width: calc(100vw - 2rem);
+	}
+
+
+	background-color: var(--color-accent);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+}
+
+.window header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+

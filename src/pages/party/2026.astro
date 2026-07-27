@@ -1,0 +1,29 @@
+---
+export const prerender = false;
+import DefaultLayout from "../../layouts/Default.astro";
+import { Button } from "../../components/party/2026/Button";
+import { Registration } from "../../components/party/2026/RegistrationWidget";
+---
+
+<DefaultLayout title="Implo Party Invite 2026">
+	<div class="viewport">
+		<main class="main-content ">
+			<div class="column">
+				<section class="banner">
+					<img src="/implo_pixelated_logo.png" alt="">
+				</section>
+			</div>
+			<div class="column">
+				<section class="action">
+					<Registration />
+					<Button fullWidth>Restaurant Vote</Button>
+				</section>
+			</div>
+		</main>
+	</div>
+</DefaultLayout>
+
+<style is:global lang="scss">
+	@use '../../styles/pixel/clipPaths';
+	@use '../../styles/pixel/pixel';
+</style>

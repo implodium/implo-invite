@@ -1,0 +1,193 @@
+@use './window';
+@use './mixins';
+@use './button';
+@use './media';
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+@import './icons.css';
+
+
+:root {
+	--color-background: #283C43;
+	--color-foreground: #B6CAC9;
+	--color-primary: #FF9972;
+	--color-primary-foreground: #FFFFFF;
+	--color-secondary: #446668;
+	--color-secondary-foreground: #FFFFFF;
+	--color-accent: #374D58;
+	--color-accent-foreground: #B6CAC9;
+}
+
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "Tiny5", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	color: var(--color-foreground);
+	overflow: visible;
+}
+
+.viewport {
+	@extend .pixel-root;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--color-background);
+}
+
+
+.main-content {
+
+	@media (min-width: media.$sm) {
+		@include mixins.border-4(var(--color-accent-foreground));
+		width: 100rem;
+		height: auto;
+		aspect-ratio: 1.5/1;
+		flex-direction: row;
+
+		&>*:not(:last-child) {
+			border-right: 3px solid var(--color-accent-foreground);
+		}
+	}
+
+	@media (max-width: media.$sm) {
+		height: 100vh;
+		width: 100vw;
+	}
+
+
+	background-color: var(--color-accent);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.main-content>.column {
+	width: 100%;
+	height: 90%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.btn-primary {
+	@include mixins.border-2(var(--color-primary-foreground), 1px);
+	background-color: var(--color-primary);
+	color: var(--color-primary-foreground);
+	padding: 0.5rem 1rem;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.btn-primary i {
+	color: var(--color-primary-foreground);
+}
+
+.btn-ghost {
+	@include mixins.border-2(transparent, 1px);
+	cursor: pointer;
+	background-color: transparent;
+	color: var(--color-primary-foreground);
+	font-size: 1.5rem;
+	padding: 0.5rem 0.5rem;
+}
+
+.btn-ghost:hover {
+	@include mixins.border-2(var(--color-primary-foreground), 1px);
+	padding: 0.5rem 0.5rem;
+}
+
+section.action {
+	width: 90%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+section.banner {
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	img {
+		width: 70%
+	}
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+	/* Add dots under the hoverable text */
+	cursor: pointer;
+	overflow: visible;
+}
+
+/* Tooltip text */
+.tooltiptext {
+	overflow: visible;
+	visibility: hidden;
+	/* Hidden by default */
+	width: 130px;
+	background-color: black;
+	color: #ffffff;
+	text-align: center;
+	padding: 5px 0;
+	border-radius: 6px;
+	position: absolute;
+	z-index: 1001;
+	/* Ensure tooltip is displayed above content */
+}
+
+.tooltiptext-right {
+	top: -5px;
+	left: 105%;
+}
+
+.tooltiptext-top {
+	width: 130px;
+	bottom: 100%;
+	left: 65%;
+	margin-left: -65px;
+	/* Use half of the width (130/2 = 65), to center the tooltip */
+}
+
+/* Show the tooltip text on hover */
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
+.modal {
+	@include mixins.border-4(var(--color-accent-foreground));
+	background-color: var(--color-accent);
+	z-index: 10;
+	box-shadow: 0 0 10px var(--color-accent-foreground);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: none;
+	padding: 2rem;
+}
+
+.modal-open {
+	display: block !important;
+}
+
+.modal-backdrop {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9;
+	background-color: transparent;
+}

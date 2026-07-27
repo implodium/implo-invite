@@ -1,14 +1,3 @@
+.DS_Store
 node_modules
-.gitignore
-.git
-.dockerignore
-.env
 dist
-pb_data
-pb_migrations
-tmp
-README.md
-creds.json
-backend.Dockerfile
-compose.yml
-shell.nix

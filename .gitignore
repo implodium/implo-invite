@@ -1,45 +1,26 @@
-# General
-.env
+# build output
+dist/
+# generated types
+.astro/
 
-# Logs
-logs
-*.log
+# dependencies
+node_modules/
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
-# pocketbase
+# jetbrains setting folder
+.idea/
 
-pb_data
-pb_migrations
-
-# creds
-
-creds.json
-
-# tmp
-
-tmp
-
-# nuxt ui
-
-auto-imports.d.ts
-components.d.ts
+local.db

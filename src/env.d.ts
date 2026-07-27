@@ -1,8 +1,20 @@
-/// <reference types="vite/client" />
-
-declare module '*.vue' {
-	import { DefineComponent } from 'vue'
-	const component: DefineComponent<{}, {}, any>
-	export default component
+interface ImportMetaEnv {
+	readonly BETTER_AUTH_SECRET: string
+	readonly DB_FILE_NAME: string
+	readonly DISCORD_CLIENT_ID: string
+	readonly DISCORD_CLIENT_SECRET: string
 }
 
+interface ImportMeta {
+	readonly env: ImportMetaEnv
+}
+
+/// <reference path="../.astro/types.d.ts" />
+
+declare namespace App {
+	// Note: 'import {} from ""' syntax does not work in .d.ts files.
+	interface Locals {
+		user: import("better-auth").User | null;
+		session: import("better-auth").Session | null;
+	}
+}
