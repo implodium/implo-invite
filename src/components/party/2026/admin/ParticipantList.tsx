@@ -20,7 +20,7 @@ type ParticipantListProps = {
 export function ParticipantList(props: ParticipantListProps) {
 	const [filter, setFilter] = createSignal<Filter>({
 		shopping: false,
-		lunch: true,
+		lunch: false,
 		dinner: false,
 		overnight: false,
 	})
