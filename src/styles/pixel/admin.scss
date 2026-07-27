@@ -71,3 +71,27 @@
 .admin h1 {
 	color: var(--color-primary-foreground);
 }
+
+.admin .active {
+	background-color: var(--color-primary);
+	color: var(--color-primary-foreground);
+}
+
+.admin .participant-entry {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.admin .participant-entry span {
+	padding: 0.2rem;
+	color: var(--color-primary-foreground);
+}
+
+.admin .filter-container {
+
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+

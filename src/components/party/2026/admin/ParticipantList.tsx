@@ -52,16 +52,13 @@ export function ParticipantList(props: ParticipantListProps) {
 					lunch: participant.lunch,
 				})
 			})
-			.map((participant) => (
-				<li>{participant.name}</li>
-			))
 	}
 
 	return <>
 		<div>
 			Count: {flatParticipants().length}
 		</div>
-		<div>
+		<div class="filter-container">
 			<input type="checkbox" checked={filter().shopping} onChange={(e) => {
 				setFilter({
 					...filter(),
@@ -93,6 +90,15 @@ export function ParticipantList(props: ParticipantListProps) {
 		</div>
 		{
 			flatParticipants()
+				.map((participant) => (
+					<li class="participant-entry">
+						{participant.name}
+						<span classList={{ active: participant.shopping }}>Shopping</span>
+						<span classList={{ active: participant.lunch }}>Lunch</span>
+						<span classList={{ active: participant.dinner }}>Dinner</span>
+						<span classList={{ active: participant.overnight }}>Overnight</span>
+					</li>
+				))
 		}
 	</>
 
