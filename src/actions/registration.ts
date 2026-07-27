@@ -5,13 +5,13 @@ import { auth, checkAuthFor } from "../utils/auth";
 import { db } from "../db/database";
 import { and, eq } from "drizzle-orm";
 import { Participant, Event } from "../db/schema";
-import { RegistrationOptionsSchema } from "../utils/shared_types";
+import { ParticipantExtraSchema } from "../utils/party/2026/type";
 
 export const registration = {
 	registerOrUpdate: defineAction({
 		input: z.object({
 			eventId: z.string().describe("The event id of the event to register for"),
-			registrationOptions: RegistrationOptionsSchema
+			registrationOptions: ParticipantExtraSchema
 		}),
 		handler: async ({ eventId, registrationOptions }, context) => {
 			const ckeckResult = await checkAuthFor(context.request.headers, eventId)
@@ -108,7 +108,7 @@ export const registration = {
 					}
 
 
-					const parsedExtras = RegistrationOptionsSchema.safeParse(participant.extra)
+					const parsedExtras = ParticipantExtraSchema.safeParse(participant.extra)
 					if (!parsedExtras.success) {
 						throw new ActionError({
 							code: "INTERNAL_SERVER_ERROR",

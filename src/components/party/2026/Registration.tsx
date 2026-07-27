@@ -2,9 +2,9 @@ import { Button } from "./Button";
 import { createSignal, For, Show } from "solid-js";
 import { actions } from "astro:actions";
 import type { z } from "astro/zod";
-import type { RegistrationOptionsSchema } from "../../../utils/shared_types";
 import { Modal } from "./Modal";
 import { authClient } from "../../../utils/auth_client";
+import type { ParticipantExtraSchema } from "../../../utils/party/2026/type";
 
 type Person = {
 	name: string,
@@ -18,7 +18,7 @@ type RegistrationProps = {
 	user: {
 		name: string,
 	},
-	registration: z.infer<typeof RegistrationOptionsSchema> | undefined
+	registration: z.infer<typeof ParticipantExtraSchema> | undefined
 }
 
 export function Registration(props: RegistrationProps) {

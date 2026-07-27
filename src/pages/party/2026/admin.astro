@@ -6,14 +6,20 @@ import { user } from "../../../db/auth-schema";
 import type { ImploParty2026EventExtra } from "../../../utils/shared_types";
 import { VoteConfig } from "../../../config/vote";
 import { ParticipantList } from "../../../components/party/2026/admin/ParticipantList";
+import { ParticipantExtraSchema } from "../../../utils/party/2026/type";
 
 export const prerender = false;
 
-const participants = await db.select().from(Participant).where(eq(Participant.event, 'ImploParty2026'));
-const participantsWithName = await Promise.all( participants.map(async (participant) => {
+const participantsResult = await db.select().from(Participant).where(eq(Participant.event, 'ImploParty2026'))
+const participantsWithName = await Promise.all( participantsResult.map(async (participant) => {
 	const usr = await db.select().from(user).where(eq(user.id, participant.user ?? '')).get();
-	return { ...participant, name: usr?.name };
+	return { ...participant, name: usr?.name ?? '' };
 }))
+
+const participants = participantsWithName.map(participant => {
+	const saveExtra = ParticipantExtraSchema.parse(participant.extra)
+	return { ...participant, extra: saveExtra }
+})
 
 type PointEntry = {
 	user: string,
@@ -71,7 +77,7 @@ function entryComperator([_1, entries]: [string, PointEntry[]], [_2, otherEntrie
 				<h2>Participants</h2>
 				<hr/>
 				<ul class="sqare">
-					<ParticipantList client:load participants={participantsWithName} />
+					<ParticipantList client:load participants={participants} />
 				</ul>
 			</section>
 			<section>

@@ -1,6 +1,6 @@
 import type { z } from "astro/zod"
-import type { RegistrationOptionsSchema } from "../../../../utils/shared_types"
 import { createSignal } from "solid-js"
+import type { ParticipantExtraSchema, PersonExtraSchema } from "../../../../utils/party/2026/type"
 
 type Filter = {
 	shopping: boolean,
@@ -12,7 +12,7 @@ type Filter = {
 type ParticipantListProps = {
 	participants: {
 		name: string,
-		extra: z.infer<typeof RegistrationOptionsSchema>
+		extra: z.infer<typeof ParticipantExtraSchema>
 	}[]
 }
 
@@ -25,7 +25,7 @@ export function ParticipantList(props: ParticipantListProps) {
 		overnight: false,
 	})
 
-	function filterRecord(participant: {dinner: boolean, overnight: boolean, shopping: boolean, lunch: boolean, name: string}) {
+	function filterRecord(participant: z.infer<typeof PersonExtraSchema>) {
 		return filterField(participant.dinner, filter().dinner)
 			&& filterField(participant.overnight, filter().overnight)
 			&& filterField(participant.shopping, filter().shopping)
@@ -40,7 +40,27 @@ export function ParticipantList(props: ParticipantListProps) {
 		return value
 	}
 
+	function flatParticipants() {
+		return props.participants
+			.flatMap(participant => [{ ...participant.extra, name: participant.name }, ...participant.extra.otherPeople])
+			.filter(participant => {
+				return filterRecord({
+					name: participant.name,
+					dinner: participant.dinner,
+					overnight: participant.overnight,
+					shopping: participant.shopping,
+					lunch: participant.lunch,
+				})
+			})
+			.map((participant) => (
+				<li>{participant.name}</li>
+			))
+	}
+
 	return <>
+		<div>
+			Count: {flatParticipants().length}
+		</div>
 		<div>
 			<input type="checkbox" checked={filter().shopping} onChange={(e) => {
 				setFilter({
@@ -72,20 +92,7 @@ export function ParticipantList(props: ParticipantListProps) {
 			<label>Overnight</label>
 		</div>
 		{
-			props.participants
-				.flatMap(participant => [{...participant.extra, name: participant.name}, ...participant.extra.otherPeople])
-				.filter(participant => {
-					return filterRecord({
-						name: participant.name,
-						dinner: participant.dinner,
-						overnight: participant.overnight,
-						shopping: participant.shopping,
-						lunch: participant.lunch,
-					})
-				})
-				.map((participant) => (
-					<li>{participant.name}</li>
-				))
+			flatParticipants()
 		}
 	</>
 
