@@ -46,3 +46,19 @@ export async function checkAuthFor(headers: Request['headers'], eventId: string)
 
 	return 'ok'
 }
+
+type Session = Awaited<ReturnType<typeof auth.api.getSession>>
+
+export async function isAdmin(session: Session | null) {
+	const runtimeEnvs = getRuntimeEnvs()
+
+	if (session?.user === null) {
+		return false
+	}
+
+	if (session?.user.id !== runtimeEnvs.ADMIN_ID) {
+		return false
+	}
+
+	return true
+}

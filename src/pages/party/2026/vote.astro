@@ -2,6 +2,7 @@
 export const prerender = false;
 import DefaultLayout from "../../../layouts/Default.astro";
 import { Vote } from "../../../components/party/2026/Vote";
+import { actions } from "astro:actions";
 
 const restaurants = [
 	"Dao",
@@ -38,11 +39,22 @@ const restaurants = [
 	"Coconut"
 ].toSorted()
 
+const locks = await Astro.callAction(actions.locking2026.getLocks, { eventId: 'ImploParty2026' })
+
+function isLocked() {
+	if (locks.data === undefined) {
+		return false
+	}
+
+	return locks.data.voting
+}
+
 ---
 
 <DefaultLayout title="Implo Party Invite 2026">
 	<div class="viewport">
-		<main class="window">
+		<main class={isLocked() ? 'locked window' : 'window'}>
+			{ isLocked() ? <>Vote is Locked now</> : <></> }
 			<Vote client:load restaurants={restaurants} />
 		</main>
 	</div>

@@ -191,3 +191,10 @@ section.banner {
 	z-index: 9;
 	background-color: transparent;
 }
+
+.locked {
+	opacity: 0.5;
+	user-select: none;
+	pointer-events: none;
+	cursor: not-allowed;
+}

@@ -4,7 +4,7 @@ import { actions } from "astro:actions";
 import type { z } from "astro/zod";
 import { Modal } from "./Modal";
 import { authClient } from "../../../utils/auth_client";
-import type { ParticipantExtraSchema } from "../../../utils/party/2026/type";
+import type { EventExtraLocksSchema, ParticipantExtraSchema } from "../../../utils/party/2026/type";
 
 type Person = {
 	name: string,
@@ -19,7 +19,10 @@ type RegistrationProps = {
 		name: string,
 	},
 	registration: z.infer<typeof ParticipantExtraSchema> | undefined
+	locks: z.infer<typeof EventExtraLocksSchema>['registration'] | undefined
 }
+
+type IndividualLocks = Extract<z.infer<typeof EventExtraLocksSchema>['registration'], { flags: {} }>['flags']
 
 export function Registration(props: RegistrationProps) {
 	const [userPerson, setUserPerson] = createSignal<Person>({
@@ -39,9 +42,23 @@ export function Registration(props: RegistrationProps) {
 	}
 
 	const [otherPeople, setOtherPeople] = createSignal<Person[]>(props.registration?.otherPeople ?? [])
+	const locks: () => IndividualLocks = () => {
+		if (props.locks === undefined || typeof props.locks === 'boolean') {
+			return {
+				dinner: false,
+				lunch: false,
+				shopping: false,
+				overnight: false
+			}
+		} else {
+			return props.locks.flags
+		}
+	}
 
-	function Checkbox(props: { enabled: boolean, onChange?: (enabled: boolean) => void }) {
-		return <div class="checkbox-container">
+
+
+	function Checkbox(props: { enabled: boolean, onChange?: (enabled: boolean) => void, locked?: boolean }) {
+		return <div class="checkbox-container" classList={{ locked: props.locked }}>
 			<label class="checkbox">
 				<span> [ </span>
 				<input type="checkbox" checked={props.enabled} onChange={(e) => {
@@ -72,10 +89,10 @@ export function Registration(props: RegistrationProps) {
 
 		return <tr class="table-row">
 			<td> <NameDisplay /> </td>
-			<td> <Checkbox enabled={person().shopping} onChange={(enabled) => props.onChange({ ...person(), shopping: enabled })} /> </td>
-			<td> <Checkbox enabled={person().lunch} onChange={(enabled) => props.onChange({ ...person(), lunch: enabled })} /> </td>
-			<td> <Checkbox enabled={person().dinner} onChange={(enabled) => props.onChange({ ...person(), dinner: enabled })} /> </td>
-			<td> <Checkbox enabled={person().overnight} onChange={(enabled) => props.onChange({ ...person(), overnight: enabled })} /> </td>
+			<td> <Checkbox locked={locks().shopping} enabled={person().shopping} onChange={(enabled) => props.onChange({ ...person(), shopping: enabled })} /> </td>
+			<td> <Checkbox locked={locks().lunch} enabled={person().lunch} onChange={(enabled) => props.onChange({ ...person(), lunch: enabled })} /> </td>
+			<td> <Checkbox locked={locks().dinner} enabled={person().dinner} onChange={(enabled) => props.onChange({ ...person(), dinner: enabled })} /> </td>
+			<td> <Checkbox locked={locks().overnight} enabled={person().overnight} onChange={(enabled) => props.onChange({ ...person(), overnight: enabled })} /> </td>
 			<Show when={!props.pinned}>
 				<td> <Button variant="ghost" onclick={() => props.onDelete?.()}><i class="hn hn-trash"></i></Button> </td>
 			</Show>
@@ -170,11 +187,11 @@ export function Registration(props: RegistrationProps) {
 			<table class="registration-table">
 				<thead>
 					<tr class="table-row">
-						<th>Name <Info /></th>
-						<th>Shopping <Info /> </th>
-						<th>Lunch <Info /></th>
-						<th>Dinner <Info /></th>
-						<th>Overnight <Info /></th>
+						<th classList={{ locked: locks().shopping }}>Name <Info /></th>
+						<th classList={{ locked: locks().shopping }}>Shopping <Info /> </th>
+						<th classList={{ locked: locks().lunch }}>Lunch <Info /></th>
+						<th classList={{ locked: locks().dinner }}>Dinner <Info /></th>
+						<th classList={{ locked: locks().overnight }}>Overnight <Info /></th>
 						<th></th>
 					</tr>
 				</thead>

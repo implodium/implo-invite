@@ -8,12 +8,27 @@ const eventId = "ImploParty2026"
 const user = Astro.locals.user ? Astro.locals.user : Astro.redirect('/login')
 const registrationResponse = await Astro.callAction(actions.registration.getRegistraiton, { eventId })
 const registration = registrationResponse
+const locks = await Astro.callAction(actions.locking2026.getLocks, { eventId })
+
+function isLocked() {
+	if (locks.data === undefined) {
+		return false
+	}
+
+	if (locks.data.registration === true) {
+		return true
+	} else {
+		return false
+	}
+}
 ---
 
 <DefaultLayout title="Implo Party Invite 2026">
+
 	<div class="viewport">
-		<main class="window a4">
-			{ user instanceof Response ? <></> : <Registration client:load user={user} registration={registration.data} />}
+		<main class={isLocked() ? 'locked window' : 'window'}>
+			{ isLocked() ? <>Registration is Locked now</> : <></> }
+			{ user instanceof Response ? <></> : <Registration client:load user={user} registration={registration.data} locks={locks.data?.registration} />}
 		</main>
 	</div>
 </DefaultLayout>

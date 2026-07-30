@@ -95,3 +95,14 @@
 	align-items: center;
 }
 
+.admin .locking-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.admin .locking-check-pair {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5rem;
+}

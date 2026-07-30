@@ -1,10 +1,9 @@
-import { auth, checkAuthFor } from "./utils/auth";
+import { auth, checkAuthFor, isAdmin } from "./utils/auth";
 import { defineMiddleware } from "astro:middleware";
 import { getRuntimeEnvs } from "./utils/environemnt";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-	console.log(context.url.pathname)
-	const isAuthed = await auth.api
+	const session = await auth.api
 		.getSession({
 			headers: context.request.headers,
 		})
@@ -24,7 +23,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		return next()
 	}
 
-	if (!isAuthed) {
+	if (!session) {
 		return context.redirect(`/login?redirect=${context.url.pathname}`);
 	}
 
@@ -35,7 +34,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 			return context.redirect("/403");
 		}
 
-		if (context.url.pathname === '/party/2026/admin' && isAuthed.user.id !== getRuntimeEnvs().ADMIN_ID) {
+		if (context.url.pathname === '/party/2026/admin' && !isAdmin(session)) {
 			return context.redirect("/403");
 		}
 
@@ -44,13 +43,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		}
 
 
-		context.locals.user = isAuthed.user;
-		context.locals.session = isAuthed.session;
+		context.locals.user = session.user;
+		context.locals.session = session.session;
 		return next();
 	}
 
 
-	context.locals.user = isAuthed.user;
-	context.locals.session = isAuthed.session;
+	context.locals.user = session.user;
+	context.locals.session = session.session;
 	return next();
 });

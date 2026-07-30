@@ -7,6 +7,7 @@ import { z } from "astro/zod"
 import { handleCheckResult } from "./util"
 import { Event } from "../db/schema"
 import type { ImploParty2026EventExtra } from "../utils/shared_types"
+import { EventExtraSchema } from "../utils/party/2026/type"
 
 export const voting2026 = {
 	submitVote: defineAction({
@@ -41,9 +42,20 @@ export const voting2026 = {
 					}
 
 
-					const exteDetails: ImploParty2026EventExtra = event.extra as ImploParty2026EventExtra
-					if (!exteDetails.votes) {
-						exteDetails.votes = {}
+					const exteDetails = EventExtraSchema.safeParse(event.extra).data
+
+					if (!exteDetails) {
+						throw new ActionError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: "Failed to parse event extra"
+						})
+					}
+
+					if (exteDetails.locks.voting) {
+						throw new ActionError({
+							code: "BAD_REQUEST",
+							message: "Voting is locked"
+						})
 					}
 
 					exteDetails.votes[session?.user.id ?? 'unknown'] = restaurants

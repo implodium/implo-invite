@@ -3,10 +3,11 @@ import { eq } from "drizzle-orm";
 import { db } from "../../../db/database";
 import { Participant, Event } from "../../../db/schema";
 import { user } from "../../../db/auth-schema";
-import type { ImploParty2026EventExtra } from "../../../utils/shared_types";
 import { VoteConfig } from "../../../config/vote";
 import { ParticipantList } from "../../../components/party/2026/admin/ParticipantList";
-import { ParticipantExtraSchema } from "../../../utils/party/2026/type";
+import { EventExtraSchema, ParticipantExtraSchema } from "../../../utils/party/2026/type";
+import { actions } from "astro:actions";
+import { LockingPanel } from "../../../components/party/2026/LockingPanel";
 
 export const prerender = false;
 
@@ -27,14 +28,14 @@ type PointEntry = {
 }
 
 const event = await db.select().from(Event).where(eq(Event.id, 'ImploParty2026')).get()
-const exteDetails: ImploParty2026EventExtra = event?.extra as ImploParty2026EventExtra
+const exteDetails = EventExtraSchema.safeParse(event?.extra).data
 
 const userIdToName = new Map(await Promise.all(
-	Object.keys(exteDetails.votes ?? {})
+	Object.keys(exteDetails?.votes ?? {})
 	.map(async (id): Promise<[string, string | undefined]> => [id, (await getUserById(id))?.name])
 ))
 
-const entriesPerRestaurant = Object.entries(exteDetails.votes ?? {})
+const entriesPerRestaurant = Object.entries(exteDetails?.votes ?? {})
 .reduce((acc, [user, ranking]) => {
 	ranking.forEach((restaurant, index) => {
 		const currentEntries = acc.get(restaurant) ?? []
@@ -47,6 +48,7 @@ const entriesPerRestaurant = Object.entries(exteDetails.votes ?? {})
 	return acc;
 }, new Map<string, PointEntry[]>())
 
+const locks = await Astro.callAction(actions.locking2026.getLocks, { eventId: 'ImploParty2026' })
 
 async function getUserById(userId: string) {
 	const usr = await db.select().from(user).where(eq(user.id, userId)).get();
@@ -101,6 +103,11 @@ function entryComperator([_1, entries]: [string, PointEntry[]], [_2, otherEntrie
 				</ul>
 			</section>
 
+			<section>
+				<h2>Locks</h2>
+				<hr/>
+				{ locks.data ? <LockingPanel client:load locks={locks.data} /> : <></> }
+			</section>
 			</div>
 		</main>
 
