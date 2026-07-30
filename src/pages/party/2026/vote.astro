@@ -53,9 +53,8 @@ function isLocked() {
 
 <DefaultLayout title="Implo Party Invite 2026">
 	<div class="viewport">
-		<main class={isLocked() ? 'locked window' : 'window'}>
-			{ isLocked() ? <>Vote is Locked now</> : <></> }
-			<Vote client:load restaurants={restaurants} />
+		<main class="window">
+			<Vote client:load restaurants={restaurants} locked={isLocked()} />
 		</main>
 	</div>
 </DefaultLayout>

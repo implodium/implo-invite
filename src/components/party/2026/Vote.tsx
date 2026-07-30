@@ -1,4 +1,4 @@
-import { createSignal, onMount, Show } from "solid-js"
+import { createMemo, createSignal, onMount, Show } from "solid-js"
 import { Button } from "./Button";
 import { actions } from "astro:actions";
 import { VoteConfig } from "../../../config/vote";
@@ -7,6 +7,7 @@ import { authClient } from "../../../utils/auth_client";
 
 export type Props = {
 	restaurants: string[]
+	locked: boolean
 }
 
 export function Vote(props: Props) {
@@ -22,8 +23,11 @@ export function Vote(props: Props) {
 		const { data: vote, error } = await actions.voting2026.getVote({ eventId: 'ImploParty2026' })
 
 		if (error) {
+			console.error(error)
 			return
 		}
+
+		console.log(vote)
 
 		setSelected(vote)
 		setVoteWasSubmittedAlready(true)
@@ -86,6 +90,23 @@ export function Vote(props: Props) {
 	async function logout() {
 		await authClient.signOut()
 		window.location.reload()
+	}
+
+	if (props.locked) {
+		const content = createMemo(() => selected().length > 0 ? <>
+			<h2>Vote is locked. You have voted for: </h2>
+			<ul style={{ "list-style": "inside" }}>
+				{selected().map(restaurant => <li>[{selected().indexOf(restaurant) + 1}] {restaurant}</li>)}
+			</ul>
+		</> : <h2>You have voted for nothing</h2>)
+
+		return <div class="vote">
+			<header>
+				<h1>Vote</h1>
+				<Button onclick={logout}><i class="hn hn-logout"></i></Button>
+			</header>
+			{ content() }
+		</div>
 	}
 
 
