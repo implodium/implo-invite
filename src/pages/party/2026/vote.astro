@@ -3,6 +3,8 @@ export const prerender = false;
 import DefaultLayout from "../../../layouts/Default.astro";
 import { Vote } from "../../../components/party/2026/Vote";
 import { actions } from "astro:actions";
+import { getEntriesPerRestaurant } from "../../../utils/party/2026/util";
+import { VoteResult } from "../../../components/party/2026/VoteResult";
 
 const restaurants = [
 	"Dao",
@@ -49,12 +51,15 @@ function isLocked() {
 	return locks.data.voting
 }
 
+const entriesPerRestaurant = await getEntriesPerRestaurant()
+
 ---
 
 <DefaultLayout title="Implo Party Invite 2026">
 	<div class="viewport">
 		<main class="window">
 			<Vote client:load restaurants={restaurants} locked={isLocked()} />
+			{isLocked() ? <VoteResult entries={entriesPerRestaurant} showIndiviualVotes={false} /> : <></> }
 		</main>
 	</div>
 </DefaultLayout>

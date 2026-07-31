@@ -1,0 +1,13 @@
+ul.nomark {
+	list-style: none;
+	list-style-position: inside;
+}
+
+.admin ul.ordered {
+	list-style: decimal;
+	list-style-position: inside;
+
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
