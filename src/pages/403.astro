@@ -32,10 +32,28 @@ const message = "You don't have permission to access this page. Contact the Lebe
         <p class="code">403</p>
         <h1>{title}</h1>
         <p class="message">{message}</p>
+		<button class="button logout">
+			Logout
+		</button>
+
       </div>
     </main>
   </body>
 </html>
+
+<script>
+import { authClient } from "../utils/auth_client"
+
+
+	const logoutButton = document.querySelector('.button.logout')
+
+	if (logoutButton) {
+		logoutButton.addEventListener('click', async () => {
+			await authClient.signOut()
+			window.location.replace('/login')
+		})
+	}
+</script>
 
 <style>
   :global(body) {
